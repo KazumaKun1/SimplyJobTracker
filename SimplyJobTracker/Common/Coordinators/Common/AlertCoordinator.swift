@@ -53,7 +53,10 @@ extension AlertCoordinator {
 
     func dismissAlert() {
         presentAlert = nil
-        if !alertQueue.isEmpty {
+
+        guard !alertQueue.isEmpty else { return }
+
+        Task { @MainActor in
             presentAlert = alertQueue.removeFirst()
         }
     }
