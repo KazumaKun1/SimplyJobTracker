@@ -21,3 +21,13 @@ class Interview {
         self.date = .now
     }
 }
+
+extension Array where Element == Interview {
+    var fullDescription: String {
+        if count > 1 {
+            return "\(count) interviews"
+        }
+        
+        return "\(count) interview"
+    }
+}

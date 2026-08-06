@@ -24,7 +24,9 @@ enum HomeSheetRoute: Identifiable {
 }
 
 @Observable
-class HomeCoordinator: NavigationCoordinator {
+class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
+    var presentAlert: AlertConfig?
+    
     typealias NavigationRoute = HomeRoute
     
     var path: NavigationPath = NavigationPath()
@@ -48,14 +50,7 @@ class HomeCoordinator: NavigationCoordinator {
     func build(route: HomeRoute) -> some View {
         switch route {
         case .start:
-            HomeView(
-                viewModel: HomeViewModel(
-                    service: JobApplicationServiceImpl(
-                        modelContainer: modelContainer
-                    ),
-                    coordinator: self
-                )
-            )
+            HomeView(viewModel: homeViewModel)
         case .editApplication:
             Text("Edit")
         }
