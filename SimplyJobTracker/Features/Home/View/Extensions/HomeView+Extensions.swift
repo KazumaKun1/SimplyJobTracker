@@ -212,16 +212,23 @@ extension HomeView {
 // MARK: - Application List
 extension HomeView {
     struct NoJobApplicationView: View {
+        let isFiltered: Bool
+
         var body: some View {
-            VStack {
+            VStack(spacing: 8) {
                 Spacer()
-                Text("Oops! You have no job applications")
+                Text(isFiltered ? "No matches for your filters" : "Oops! You have no job applications")
                     .font(.callout)
                     .foregroundStyle(.secondary)
-                    .padding()
                     .multilineTextAlignment(.center)
+                if isFiltered {
+                    Text("Try adjusting or clearing your filters")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
                 Spacer()
             }
+            .padding()
         }
     }
     

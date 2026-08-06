@@ -36,12 +36,25 @@ struct AlertConfig: Identifiable {
 
 protocol AlertCoordinator: AnyObject {
     var presentAlert: AlertConfig? { get set }
-    
+    var alertQueue: [AlertConfig] { get set }
+
     func presentAlert(_ alert: AlertConfig)
+    func dismissAlert()
 }
 
 extension AlertCoordinator {
     func presentAlert(_ alert: AlertConfig) {
-        self.presentAlert = alert
+        guard presentAlert == nil else {
+            alertQueue.append(alert)
+            return
+        }
+        presentAlert = alert
+    }
+
+    func dismissAlert() {
+        presentAlert = nil
+        if !alertQueue.isEmpty {
+            presentAlert = alertQueue.removeFirst()
+        }
     }
 }

@@ -13,6 +13,21 @@ struct JobApplicationFilter {
 }
 
 struct DateContainer {
-    var singleDate: Date?
-    var dateRange: ClosedRange<Date>?
+    enum Selection {
+        case none
+        case single(Date)
+        case range(ClosedRange<Date>)
+    }
+    
+    var selection: Selection = .none
+    
+    var singleDate: Date? {
+        get { if case .single(let date) = selection { return date }; return nil }
+        set { selection = newValue.map(Selection.single) ?? .none }
+    }
+    
+    var dateRange: ClosedRange<Date>? {
+        get { if case .range(let range) = selection { return range }; return nil }
+        set { selection = newValue.map(Selection.range) ?? .none }
+    }
 }

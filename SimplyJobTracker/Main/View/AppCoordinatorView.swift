@@ -44,7 +44,7 @@ private extension AppCoordinatorView {
                 coordinator.presentAlert?.title ?? "",
                 isPresented: Binding(
                     get: { coordinator.presentAlert != nil },
-                    set: { if !$0 { coordinator.presentAlert = nil } }
+                    set: { if !$0 { coordinator.dismissAlert() } }
                 ),
                 presenting: coordinator.presentAlert
             ) { config in

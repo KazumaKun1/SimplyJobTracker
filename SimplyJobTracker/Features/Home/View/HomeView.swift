@@ -26,14 +26,18 @@ struct HomeView: View {
             if let status = filter.status, application.status != status {
                 return false
             }
-
-            if let singleDate = filter.dateContainer.singleDate,
-               !Calendar.current.isDate(application.date, inSameDayAs: singleDate) {
-                return false
-            }
-
-            if let dateRange = filter.dateContainer.dateRange, !dateRange.contains(application.date) {
-                return false
+            
+            switch filter.dateContainer.selection {
+            case .none:
+                break
+            case .single(let date):
+                if !Calendar.current.isDate(application.date, inSameDayAs: date) {
+                    return false
+                }
+            case .range(let closedRange):
+                if !closedRange.contains(application.date) {
+                    return false
+                }
             }
 
             return true
@@ -91,7 +95,7 @@ struct HomeView: View {
                 
                 HeaderView(text: "APPLICATION", height: 20) {
                     Button {
-                        // ACtion to present a search sheet
+                        // TODO: - Implement the searchable sheet here
                     } label: {
                         Image(systemName: "magnifyingglass")
                     }
@@ -101,7 +105,7 @@ struct HomeView: View {
                 .padding(.vertical)
 
                 if filteredApplications.isEmpty {
-                    NoJobApplicationView()
+                    NoJobApplicationView(isFiltered: !jobApplications.isEmpty)
                 } else {
                     JobApplicationList(jobApplications: filteredApplications)
                 }

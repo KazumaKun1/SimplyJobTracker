@@ -26,6 +26,7 @@ enum HomeSheetRoute: Identifiable {
 @Observable
 class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
     var presentAlert: AlertConfig?
+    var alertQueue: [AlertConfig] = []
     
     typealias NavigationRoute = HomeRoute
     
