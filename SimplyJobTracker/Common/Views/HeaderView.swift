@@ -11,13 +11,16 @@ typealias ViewContentBuilder<Content: View> = () -> Content
 
 struct HeaderView<Leading: View, Trailing: View>: View {
     let text: String
+    let height: CGFloat
     let leadingContent: ViewContentBuilder<Leading>
     let trailingContent: ViewContentBuilder<Trailing>
     
     init(text: String,
+         height: CGFloat = 0,
          @ViewBuilder leadingContent: @escaping ViewContentBuilder<Leading> = { EmptyView() },
          @ViewBuilder trailingContent: @escaping ViewContentBuilder<Trailing> = { EmptyView() }) {
         self.text = text
+        self.height = height
         self.leadingContent = leadingContent
         self.trailingContent = trailingContent
     }
@@ -32,7 +35,7 @@ struct HeaderView<Leading: View, Trailing: View>: View {
             Spacer()
             trailingContent()
         }
-        .padding(.horizontal, 10)
+        .frame(height: height != 0 ? height : nil)
     }
 }
 

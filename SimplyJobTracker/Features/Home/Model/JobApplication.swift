@@ -16,13 +16,13 @@ class JobApplication {
     var overallExperience: String?
     var rating: Int?
     var feeling: String?
-    var applicationDate: Date
+    var date: Date
     
     @Relationship(deleteRule: .cascade, inverse: \Interview.jobApplication)
     var interviews: [Interview] = []
     
     init(status: JobApplicationStatus = .applied) {
         self.status = status
-        self.applicationDate = .now
+        self.date = .now
     }
 }

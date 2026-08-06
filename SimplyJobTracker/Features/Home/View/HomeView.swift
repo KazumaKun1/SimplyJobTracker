@@ -9,79 +9,113 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
-    @State var viewModel: HomeViewModel
+    var viewModel: HomeViewModel
     
-    @State private var currentPage = 0
-    
-    var body: some View {
-        VStack {
-            HeaderView(text: "OVERVIEW")
-            TabView(selection: $currentPage) {
-                HStack {
-                    TileView(number: 1, text: "Applied", color: .blue)
-                    TileView(number: 2, text: "Interviewing", color: .yellow)
-                    TileView(number: 1, text: "Offers", color: .green)
-                }
-                .padding(.horizontal)
-                .tag(0)
-                .frame(maxHeight: .infinity, alignment: .top)
-                
-                HStack {
-                    TileView(number: 1, text: "Rejected", color: .gray)
-                    TileView(number: 2, text: "Passed", color: .pink.mix(with: .white, by: 0.3))
-                }
-                .padding(.horizontal)
-                .tag(1)
-                .frame(maxHeight: .infinity, alignment: .top)
-            }
-            .tabViewStyle(.page)
-            .indexViewStyle(.page(backgroundDisplayMode: .always))
-            .frame(height: 135)
-            
-            HeaderView(text: "ACTIVITY")
-            
-            Text("Content Here")
-            
-            HeaderView(text: "APPLICATION") {
-                Button {
-                    // ACtion here
-                } label: {
-                    Image(systemName: "magnifyingglass")
-                }
+    @State private var filter: JobApplicationFilter = .init()
 
+    /// How many status dots each day's activity column shows before collapsing the rest
+    /// into a "+N" badge. Single source of truth — bump this to show more per day; the
+    /// dot row and the overflow count both derive from it, so they can't drift apart.
+    private let maxVisibleStatusesPerDay = 1
+
+    @Query(sort: \JobApplication.date, order: .reverse)
+    private var jobApplications: [JobApplication]
+    
+    private var filteredApplications: [JobApplication] {
+        jobApplications.filter { application in
+            if let status = filter.status, application.status != status {
+                return false
             }
             
-            Text("Content Here")
-            
-            Spacer()
+            switch filter.dateContainer.selection {
+            case .none:
+                break
+            case .single(let date):
+                if !Calendar.current.isDate(application.date, inSameDayAs: date) {
+                    return false
+                }
+            case .range(let closedRange):
+                if !closedRange.contains(application.date) {
+                    return false
+                }
+            }
+
+            return true
         }
     }
-}
-
-private extension HomeView {
-    struct TileView: View {
-        let number: Int
-        let text: String
-        let color: Color
+    
+    private var statusCounts: [JobApplicationStatus: Int] {
+        Dictionary(grouping: jobApplications, by: \.status)
+            .mapValues(\.count)
+    }
+    
+    private var filteredResultsCount: Int {
+        filteredApplications.count
+    }
+    
+    private var lastSevenDaysActivity: [DailyActivity] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: .now)
         
-        var body: some View {
-            VStack {
-                Text("\(number)")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundStyle(color)
-                Text(text)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+        let applicationsByDay = Dictionary(grouping: jobApplications) {
+            calendar.startOfDay(for: $0.date)
+        }
+
+        return (-6...0).compactMap { offset in
+            guard let date = calendar.date(byAdding: .day, value: offset, to: today) else {
+                return DailyActivity(date: .now, dayLabel: "N/A", statuses: [], excessCount: 0)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(color)
-                    .opacity(0.2)
-                    .shadow(radius: 1)
+
+            let label = date.formatted(.dateTime.weekday(.narrow)).uppercased()
+            let applicationsForDay = applicationsByDay[date] ?? []
+            let excessCount = max(0, applicationsForDay.count - maxVisibleStatusesPerDay)
+
+            return DailyActivity(
+                date: date,
+                dayLabel: label,
+                statuses: applicationsForDay.prefix(maxVisibleStatusesPerDay).map(\.status),
+                excessCount: excessCount
             )
+        }
+    }
+    
+    var body: some View {
+        ScreenContainer {
+            VStack {
+                HeaderView(text: "OVERVIEW")
+                JobMetricsView(
+                    activeFilter: $filter.status,
+                    statusCount: statusCounts
+                )
+
+                HeaderView(text: "ACTIVITY")
+
+                LastSevenDaysActivityView(activities: lastSevenDaysActivity, filter: $filter)
+                
+                
+                HeaderView(text: "APPLICATION", height: 20) {
+                    Button {
+                        // TODO: - Implement the searchable sheet here
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                    }
+                } trailingContent: {
+                    FilterTagView(filter: $filter, numberOfItems: filteredResultsCount)
+                }
+                .padding(.vertical)
+
+                if filteredApplications.isEmpty {
+                    NoJobApplicationView(isFiltered: !jobApplications.isEmpty)
+                } else {
+                    JobApplicationList(jobApplications: filteredApplications)
+                }
+            }
+            .padding(.horizontal)
+            .background(.appBackground)
+        } overlay: {
+            AddButton {
+                viewModel.createApplication()
+            }
         }
     }
 }

@@ -26,7 +26,15 @@ extension HomeViewModel {
             do {
                 try await service.createJobApplication()
             } catch {
-                // TODO: - Handle alert here
+                let generalError = JobTrackerError.generalError
+                coordinator?
+                    .presentAlert(
+                        .init(
+                            title: generalError.errorDescription ?? "",
+                            message: generalError.recoverySuggestion,
+                            primaryButton: .init(title: "Ok!")
+                        )
+                    )
             }
         }
     }
