@@ -234,14 +234,19 @@ extension HomeView {
     
     struct JobApplicationList: View {
         let jobApplications: [JobApplication]
+        let actionTapped: (JobApplication) -> Void
         
         var body: some View {
             LazyVStack(alignment: .leading, spacing: 10) {
                 ForEach(jobApplications) { application in
                     JobApplicationCard(application: application)
+                        .onTapGesture {
+                            actionTapped(application)
+                        }
                 }
             }
             .padding(.bottom)
+            .animation(.easeInOut(duration: 0.25), value: jobApplications.count)
             Spacer()
         }
     }
@@ -250,8 +255,6 @@ extension HomeView {
         @Environment(\.colorScheme) private var colorScheme
         
         let application: JobApplication
-        
-        @State private var scheduleStart = Date()
 
         var body: some View {
             HStack(alignment: .top) {
@@ -279,11 +282,9 @@ extension HomeView {
                     }
                 }
                 Spacer()
-                TimelineView(PeriodicTimelineSchedule(from: scheduleStart, by: 60.0)) { context in
-                    Text(application.date.compactRelativeString(to: context.date))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+                Text(application.date, format: .dateTime.month(.abbreviated).day())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
             .padding()
             .background(

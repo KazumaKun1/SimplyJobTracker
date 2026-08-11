@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 // MARK: - Status Selection Section
 extension EditJobApplicationView {
@@ -105,7 +106,179 @@ extension EditJobApplicationView {
     }
 }
 
+// MARK: - Application Date Section
+extension EditJobApplicationView {
+    struct CalendarSection: View {
+        @Binding var date: Date?
+        
+        private var infiniteBounds: DateInterval {
+            DateInterval(start: Date.distantPast, end: Date.distantFuture)
+        }
+        
+        var body: some View {
+            CustomSection {
+                HeaderView(text: "APPLICATION DATE")
+                DatePicker("", selection: $date.unwrapped(), in: ...Date(), displayedComponents: .date)
+                    .datePickerStyle(.graphical)
+                    .padding(.horizontal)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(.cardBackground)
+                    )
+            }
+        }
+    }
+}
 
+// MARK: - Interviews Section
+extension EditJobApplicationView {
+    struct InterviewSection: View {
+        let interviews: [Interview]
+        let addInterviewAction: () -> Void
+        let deleteInterviewAction: (Interview) -> Void
+
+        var body: some View {
+            CustomSection {
+                HeaderView(text: "INTERVIEWS · optional", leadingContent: {}) {
+                    Button {
+                        addInterviewAction()
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus")
+                            Text("Add")
+                        }
+                        .font(.callout)
+                    }
+                }
+                Group {
+                    if interviews.isEmpty {
+                        Text("You can add an interview here by tapping on '+' button above")
+                            .font(.callout)
+                            .foregroundStyle(.gray.opacity(0.8))
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    } else {
+                        LazyVStack(alignment: .leading, spacing: 10) {
+                            ForEach(interviews) { interview in
+                                InterviewCard(interview: interview) {
+                                    deleteInterviewAction(interview)
+                                }
+                            }
+                        }
+                        .animation(.easeInOut(duration: 0.25), value: interviews.count)
+                    }
+                }
+            }
+        }
+    }
+    
+    enum CardMode {
+        case display, edit
+        
+        mutating func toggle() {
+            self = (self == .display) ? .edit : .display
+        }
+    }
+    
+    struct InterviewCard: View {
+        let interview: Interview
+        @State private var isExpanded: Bool = false
+        @State private var mode: CardMode = .display
+        
+        let deleteInterviewAction: () -> Void
+        
+        var body: some View {
+            VStack(alignment: .leading) {
+                InterviewContentView(interview: interview, mode: mode, isExpanded: isExpanded)
+                
+                if isExpanded {
+                    HStack(spacing: 16) {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                mode.toggle()
+                            }
+                        } label: {
+                            Label(mode == .display ? "Edit" : "Done", systemImage: "pencil")
+                                .foregroundStyle(.blue)
+                        }
+                        
+                        Divider()
+
+                        Button {
+                            deleteInterviewAction()
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                                .foregroundStyle(.red)
+                        }
+                    }
+                    .font(.subheadline)
+                }
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(.cardBackground)
+            )
+            .onTapGesture {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    if mode == .display {
+                        isExpanded.toggle()
+                    }
+                }
+            }
+        }
+    }
+    
+    struct InterviewContentView: View {
+        let interview: Interview
+        let mode: CardMode
+        let isExpanded: Bool
+
+        private var titleBinding: Binding<String?> {
+            Binding(get: { interview.title }, set: { interview.title = $0 })
+        }
+
+        private var dateBinding: Binding<Date> {
+            Binding(get: { interview.date }, set: { interview.date = $0 })
+        }
+
+        private var descriptionBinding: Binding<String?> {
+            Binding(get: { interview.descriptionContent }, set: { interview.descriptionContent = $0 })
+        }
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 16) {
+                if mode == .display {
+                    HStack {
+                        Text(interview.title ?? "Untitled Interview")
+                            .font(.headline)
+                        Spacer()
+                        Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                            .foregroundStyle(.blue)
+                    }
+                    if isExpanded {
+                        Text(interview.date.formatted(date: .abbreviated, time: .omitted))
+                            .font(.subheadline)
+                            .foregroundStyle(.gray)
+                        Text(interview.descriptionContent ?? "e.g. the interviewer asked about...")
+                            .multilineTextAlignment(.leading)
+                    }
+                } else {
+                    TextFieldView(placeholder: "Untitled Interview", text: titleBinding)
+                        .font(.headline)
+                    if isExpanded {
+                        DatePicker("Select Date", selection: dateBinding, displayedComponents: [.date])
+                            .datePickerStyle(.compact)
+                        TextFieldView(placeholder: "e.g. the interview asked about...", text: descriptionBinding)
+                            .multilineTextAlignment(.leading)
+                    }
+                }
+            }
+            .padding(.bottom, isExpanded ? 16 : 0)
+        }
+    }
+}
 
 // MARK: - Common
 extension EditJobApplicationView {
@@ -149,7 +322,7 @@ extension EditJobApplicationView {
         }
         
         var body: some View {
-            VStack(spacing: 15) {
+            VStack(alignment: .leading, spacing: 15) {
                 content
             }
         }
@@ -157,5 +330,11 @@ extension EditJobApplicationView {
 }
 
 #Preview {
-    EditJobApplicationView(jobApplication: JobApplication())
+    let container = try! ModelContainer(
+        for: JobApplication.self, Interview.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    let coordinator = HomeCoordinator(modelContainer: container)
+    EditJobApplicationView(jobApplication: JobApplication(), viewModel: coordinator.editJobApplicationViewModel)
+        .modelContainer(container)
 }

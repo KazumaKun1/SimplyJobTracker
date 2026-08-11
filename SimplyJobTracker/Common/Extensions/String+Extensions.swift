@@ -15,3 +15,12 @@ extension Binding where Value == String? {
         )
     }
 }
+
+extension Binding where Value == Date? {
+    func unwrapped(with fallback: Date = .now) -> Binding<Date> {
+        Binding<Date>(
+            get: { self.wrappedValue ?? fallback },
+            set: { self.wrappedValue = $0 }
+        )
+    }
+}

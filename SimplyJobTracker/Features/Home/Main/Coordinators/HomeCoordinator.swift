@@ -10,7 +10,7 @@ import SwiftData
 
 nonisolated enum HomeRoute: Hashable {
     case start
-    case editApplication
+    case editApplication(JobApplication)
 }
 
 enum HomeSheetRoute: Identifiable {
@@ -34,11 +34,26 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
     var presentedSheet: HomeSheetRoute?
     
     private let modelContainer: ModelContainer
-    
+
+    @ObservationIgnored
+    private lazy var jobApplicationService: JobApplicationService = JobApplicationServiceImpl(modelContext: modelContainer.mainContext)
+
+    @ObservationIgnored
+    private lazy var interviewService: InterviewService = InterviewServiceImpl(modelContext: modelContainer.mainContext)
+
     @ObservationIgnored
     lazy var homeViewModel: HomeViewModel = {
         HomeViewModel(
-            service: JobApplicationServiceImpl(modelContainer: modelContainer),
+            service: jobApplicationService,
+            coordinator: self
+        )
+    }()
+
+    @ObservationIgnored
+    lazy var editJobApplicationViewModel: EditJobApplicationViewModel = {
+        EditJobApplicationViewModel(
+            jobApplicationService: jobApplicationService,
+            interviewService: interviewService,
             coordinator: self
         )
     }()
@@ -52,8 +67,8 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
         switch route {
         case .start:
             HomeView(viewModel: homeViewModel)
-        case .editApplication:
-            Text("Edit")
+        case .editApplication(let application):
+            EditJobApplicationView(jobApplication: application, viewModel: editJobApplicationViewModel)
         }
     }
     
