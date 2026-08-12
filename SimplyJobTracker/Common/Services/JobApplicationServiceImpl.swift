@@ -6,42 +6,37 @@
 //
 
 import SwiftData
+import SwiftUI
 
-protocol JobApplicationService: Actor {
+protocol JobApplicationService: AnyObject {
     func createJobApplication() throws
-    func createInterview(from id: PersistentIdentifier) throws
-    func delete(id: PersistentIdentifier) throws
+    func deleteJobApplication(id: PersistentIdentifier) throws
 }
 
-nonisolated enum JobApplicationServiceError: Error {
+enum JobApplicationServiceError: Error {
     case notFound
     case deletionFailed
 }
 
-@ModelActor
-actor JobApplicationServiceImpl: JobApplicationService {
+final class JobApplicationServiceImpl: JobApplicationService {
+    private let modelContext: ModelContext
+
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+    }
+
     func createJobApplication() throws {
         let jobApplication = JobApplication()
         modelContext.insert(jobApplication)
-        try modelContext.save()
-    }
-    
-    func createInterview(from id: PersistentIdentifier) throws {
-        guard let jobApplication = modelContext.model(for: id) as? JobApplication else {
-            throw JobApplicationServiceError.notFound
-        }
-        
-        let interview = Interview()
-        jobApplication.interviews.append(interview)
         
         try modelContext.save()
     }
-    
-    func delete(id: PersistentIdentifier) throws {
+
+    func deleteJobApplication(id: PersistentIdentifier) throws {
         guard let jobApplication = modelContext.model(for: id) as? JobApplication else {
             throw JobApplicationServiceError.notFound
         }
-        
+
         modelContext.delete(jobApplication)
         try modelContext.save()
     }

@@ -22,20 +22,18 @@ class HomeViewModel {
 // MARK: - Service
 extension HomeViewModel {
     func createApplication() {
-        Task {
-            do {
-                try await service.createJobApplication()
-            } catch {
-                let generalError = JobTrackerError.generalError
-                coordinator?
-                    .presentAlert(
-                        .init(
-                            title: generalError.errorDescription ?? "",
-                            message: generalError.recoverySuggestion,
-                            primaryButton: .init(title: "Ok!")
-                        )
+        do {
+            try service.createJobApplication()
+        } catch {
+            let generalError = JobTrackerError.generalError
+            coordinator?
+                .presentAlert(
+                    .init(
+                        title: generalError.errorDescription ?? "",
+                        message: generalError.recoverySuggestion,
+                        primaryButton: .init(title: "Ok!")
                     )
-            }
+                )
         }
     }
 }
@@ -46,7 +44,7 @@ extension HomeViewModel {
         coordinator?.presentSheet(.filter)
     }
     
-    func editApplicationTapped() {
-        coordinator?.navigate(to: .editApplication)
+    func editApplicationTapped(jobApplication: JobApplication) {
+        coordinator?.navigate(to: .editApplication(jobApplication))
     }
 }

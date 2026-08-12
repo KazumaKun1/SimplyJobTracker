@@ -29,7 +29,7 @@ struct ScreenContainer<Content: View, Overlay: View>: View {
 }
 
 extension ScreenContainer where Overlay == EmptyView {
-    init(alignment: HorizontalAlignment = .leading, @ViewBuilder content: () -> Content) {
+    init(@ViewBuilder content: () -> Content) {
         self.content = content()
         self.overlay = EmptyView()
     }

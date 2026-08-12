@@ -107,7 +107,9 @@ struct HomeView: View {
                 if filteredApplications.isEmpty {
                     NoJobApplicationView(isFiltered: !jobApplications.isEmpty)
                 } else {
-                    JobApplicationList(jobApplications: filteredApplications)
+                    JobApplicationList(jobApplications: filteredApplications) { application in
+                        viewModel.editApplicationTapped(jobApplication: application)
+                    }
                 }
             }
             .padding(.horizontal)
