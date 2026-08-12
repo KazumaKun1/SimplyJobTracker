@@ -239,10 +239,13 @@ extension HomeView {
         var body: some View {
             LazyVStack(alignment: .leading, spacing: 10) {
                 ForEach(jobApplications) { application in
-                    JobApplicationCard(application: application)
-                        .onTapGesture {
-                            actionTapped(application)
-                        }
+                    Button {
+                        actionTapped(application)
+                    } label: {
+                        JobApplicationCard(application: application)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("\(application.role ?? "Untitled Role") at \(application.company ?? "Untitled Company"), \(application.status.title)")
                 }
             }
             .padding(.bottom)

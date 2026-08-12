@@ -26,28 +26,32 @@ extension EditJobApplicationView {
                 
                 LazyVGrid(columns: columns, spacing: 8) {
                     ForEach(statuses, id: \.self) { status in
-                        HStack {
-                            Circle()
-                                .fill(status.color)
-                                .frame(width: 15, height: 15)
-                            Text(status.title)
-                                .font(.callout)
-                                .fontWeight(currentStatus == status ? .bold : .regular)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(status.color.opacity(0.2))
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(status.color, lineWidth: 1)
-                                .opacity(currentStatus == status ? 1 : 0)
-                        )
-                        .onTapGesture {
+                        Button {
                             currentStatus = status
+                        } label: {
+                            HStack {
+                                Circle()
+                                    .fill(status.color)
+                                    .frame(width: 15, height: 15)
+                                Text(status.title)
+                                    .font(.callout)
+                                    .fontWeight(currentStatus == status ? .bold : .regular)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(status.color.opacity(0.2))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(status.color, lineWidth: 1)
+                                    .opacity(currentStatus == status ? 1 : 0)
+                            )
                         }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(status.title)
+                        .accessibilityAddTraits(currentStatus == status ? [.isSelected] : [])
                         .animation(.default, value: currentStatus)
                     }
                 }
@@ -90,14 +94,18 @@ extension EditJobApplicationView {
                 HeaderView(text: "RATING · optional")
                 HStack {
                     ForEach(1...maxRating, id: \.self) { number in
-                        Image(systemName: "circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(number <= (rating ?? 0) ? onColor : offColor)
-                            .onTapGesture {
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    rating = number
-                                }
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                rating = number
                             }
+                        } label: {
+                            Image(systemName: "circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(number <= (rating ?? 0) ? onColor : offColor)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Rating \(number) of \(maxRating)")
+                        .accessibilityAddTraits(number <= (rating ?? 0) ? [.isSelected] : [])
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -110,10 +118,6 @@ extension EditJobApplicationView {
 extension EditJobApplicationView {
     struct CalendarSection: View {
         @Binding var date: Date?
-        
-        private var infiniteBounds: DateInterval {
-            DateInterval(start: Date.distantPast, end: Date.distantFuture)
-        }
         
         var body: some View {
             CustomSection {
@@ -165,9 +169,9 @@ extension EditJobApplicationView {
                                 }
                             }
                         }
-                        .animation(.easeInOut(duration: 0.25), value: interviews.count)
                     }
                 }
+                .animation(.smooth, value: interviews)
             }
         }
     }
@@ -189,8 +193,24 @@ extension EditJobApplicationView {
         
         var body: some View {
             VStack(alignment: .leading) {
-                InterviewContentView(interview: interview, mode: mode, isExpanded: isExpanded)
-                
+                if mode == .display {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            isExpanded.toggle()
+                        }
+                    } label: {
+                        InterviewContentView(interview: interview, mode: mode, isExpanded: isExpanded)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(interview.title ?? "Untitled Interview")
+                    .accessibilityAddTraits(isExpanded ? [.isSelected] : [])
+                    .accessibilityValue(isExpanded ? "Expanded" : "Collapsed")
+                } else {
+                    InterviewContentView(interview: interview, mode: mode, isExpanded: isExpanded)
+                }
+
                 if isExpanded {
                     HStack(spacing: 16) {
                         Button {
@@ -220,32 +240,13 @@ extension EditJobApplicationView {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(.cardBackground)
             )
-            .onTapGesture {
-                withAnimation(.easeInOut(duration: 0.25)) {
-                    if mode == .display {
-                        isExpanded.toggle()
-                    }
-                }
-            }
         }
     }
-    
+
     struct InterviewContentView: View {
-        let interview: Interview
+        @Bindable var interview: Interview
         let mode: CardMode
         let isExpanded: Bool
-
-        private var titleBinding: Binding<String?> {
-            Binding(get: { interview.title }, set: { interview.title = $0 })
-        }
-
-        private var dateBinding: Binding<Date> {
-            Binding(get: { interview.date }, set: { interview.date = $0 })
-        }
-
-        private var descriptionBinding: Binding<String?> {
-            Binding(get: { interview.descriptionContent }, set: { interview.descriptionContent = $0 })
-        }
 
         var body: some View {
             VStack(alignment: .leading, spacing: 16) {
@@ -265,12 +266,12 @@ extension EditJobApplicationView {
                             .multilineTextAlignment(.leading)
                     }
                 } else {
-                    TextFieldView(placeholder: "Untitled Interview", text: titleBinding)
+                    TextFieldView(placeholder: "Untitled Interview", text: $interview.title)
                         .font(.headline)
                     if isExpanded {
-                        DatePicker("Select Date", selection: dateBinding, displayedComponents: [.date])
+                        DatePicker("Select Date", selection: $interview.date, displayedComponents: [.date])
                             .datePickerStyle(.compact)
-                        TextFieldView(placeholder: "e.g. the interview asked about...", text: descriptionBinding)
+                        TextFieldView(placeholder: "e.g. the interview asked about...", text: $interview.descriptionContent)
                             .multilineTextAlignment(.leading)
                     }
                 }

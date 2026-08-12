@@ -29,10 +29,7 @@ final class JobApplicationServiceImpl: JobApplicationService {
         let jobApplication = JobApplication()
         modelContext.insert(jobApplication)
         
-        // TODO: - Find a way to not enclose this to task as this will swallow error. But this is the only way to fix the animation hitches when doing modification while animating.
-        Task { @MainActor in
-            try? modelContext.save()
-        }
+        try modelContext.save()
     }
 
     func deleteJobApplication(id: PersistentIdentifier) throws {
@@ -41,8 +38,6 @@ final class JobApplicationServiceImpl: JobApplicationService {
         }
 
         modelContext.delete(jobApplication)
-        Task { @MainActor in
-            try? modelContext.save()
-        }
+        try modelContext.save()
     }
 }

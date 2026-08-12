@@ -28,27 +28,35 @@ struct EditJobApplicationView: View {
     @State private var activeAlert: AlertType?
     
     var body: some View {
-        ScreenContainer {
-            VStack(spacing: 30) {
-                StatusSection(currentStatus: $jobApplication.status)
-                TextFieldSection(title: "ROLE · optional", placeholder: "e.g. Role ABC", text: $jobApplication.role)
-                TextFieldSection(title: "COMPANY · optional", placeholder: "e.g. Company ABC", text: $jobApplication.company)
-                OverallExperienceSection(overallExperience: $jobApplication.overallExperience)
-                RatingSection(rating: $jobApplication.rating)
-                TextFieldSection(title: "FEELING · optional", placeholder: "How did it feel, in a few words?", text: $jobApplication.feeling)
-                CalendarSection(date: $jobApplication.date.toOptional(fallback: .now))
-                InterviewSection(interviews: jobApplication.interviews) {
-                    viewModel.addInterview(to: jobApplication)
-                } deleteInterviewAction: { interview in
-                    activeAlert = .deleteInterview(interview)
+        ScrollViewReader { proxy in
+            ScreenContainer {
+                VStack(spacing: 30) {
+                    StatusSection(currentStatus: $jobApplication.status)
+                    TextFieldSection(title: "ROLE · optional", placeholder: "e.g. Role ABC", text: $jobApplication.role)
+                    TextFieldSection(title: "COMPANY · optional", placeholder: "e.g. Company ABC", text: $jobApplication.company)
+                    OverallExperienceSection(overallExperience: $jobApplication.overallExperience)
+                    RatingSection(rating: $jobApplication.rating)
+                    TextFieldSection(title: "FEELING · optional", placeholder: "How did it feel, in a few words?", text: $jobApplication.feeling)
+                    CalendarSection(date: $jobApplication.date.toOptional(fallback: .now))
+                    InterviewSection(interviews: jobApplication.interviews) {
+                        viewModel.addInterview(to: jobApplication)
+                    } deleteInterviewAction: { interview in
+                        activeAlert = .deleteInterview(interview)
+                    }
+                    
+                    Button(role: .destructive) {
+                        activeAlert = .deleteJobApplication
+                    } label: {
+                        Label("Delete Job Application", systemImage: "trash.fill")
+                    }
+                    .padding()
+                    .id("DeleteJobApplication")
                 }
-                
-                Button(role: .destructive) {
-                    activeAlert = .deleteJobApplication
-                } label: {
-                    Label("Delete Job Application", systemImage: "trash.fill")
+            }
+            .onChange(of: jobApplication.interviews) { _, _ in
+                withAnimation {
+                    proxy.scrollTo("DeleteJobApplication", anchor: .bottom)
                 }
-                .padding()
             }
         }
         .navigationTitle("Edit Application")

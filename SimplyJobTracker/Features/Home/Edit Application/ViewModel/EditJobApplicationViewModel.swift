@@ -30,6 +30,7 @@ extension EditJobApplicationViewModel {
         } catch {
             presentGeneralError()
         }
+        
     }
 
     func deleteInterview(_ interview: Interview) {
