@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import UIKit
 
 extension Color {
-    var cardBackground: Color {
-        Color("CardBackground")
+    static var systemPrimary: Color {
+        Color(uiColor: .systemBackground)
     }
 }

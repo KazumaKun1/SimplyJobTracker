@@ -13,9 +13,6 @@ struct HomeView: View {
     
     @State private var filter: JobApplicationFilter = .init()
 
-    /// How many status dots each day's activity column shows before collapsing the rest
-    /// into a "+N" badge. Single source of truth — bump this to show more per day; the
-    /// dot row and the overflow count both derive from it, so they can't drift apart.
     private let maxVisibleStatusesPerDay = 1
 
     @Query(sort: \JobApplication.date, order: .reverse)
@@ -113,10 +110,14 @@ struct HomeView: View {
                 }
             }
             .padding(.horizontal)
-            .background(.appBackground)
         } overlay: {
-            AddButton {
-                viewModel.createApplication()
+            VStack {
+                FloatingButton(image: "line.3.horizontal.decrease", font: .title) {
+                    viewModel.filterTapped(filter: $filter)
+                }
+                FloatingButton(image: "plus") {
+                    viewModel.createApplication()
+                }
             }
         }
     }

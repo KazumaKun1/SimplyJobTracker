@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 // MARK: - Activity View
 extension HomeView {
@@ -33,7 +34,8 @@ extension HomeView {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .opacity(0.1)
+                    .foregroundStyle(.cardBackground)
+                    .shadow(color: .black.opacity(0.1), radius: 4)
             )
         }
     }
@@ -162,7 +164,7 @@ extension HomeView {
 
         var body: some View {
             if let date {
-                FilterTagCapsule(text: date.formatted(date: .abbreviated, time: .omitted)) {
+                FilterTagCapsule(text: date.formatted(.dateTime.month(.abbreviated).day())) {
                     self.date = nil
                 }
             }
@@ -175,7 +177,7 @@ extension HomeView {
         var body: some View {
             if let range {
                 FilterTagCapsule(
-                    text: "\(range.lowerBound.formatted(date: .abbreviated, time: .omitted)) – \(range.upperBound.formatted(date: .abbreviated, time: .omitted))"
+                    text: "\(range.lowerBound.formatted(.dateTime.month(.abbreviated).day())) – \(range.upperBound.formatted(.dateTime.month(.abbreviated).day()))"
                 ) {
                     self.range = nil
                 }
@@ -193,6 +195,8 @@ extension HomeView {
                 Text(text)
                     .font(.caption)
                     .fontWeight(.semibold)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
                 Button(action: onClose) {
                     Image(systemName: "xmark")
                         .font(.caption2)
@@ -203,7 +207,8 @@ extension HomeView {
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(
-                Capsule().foregroundStyle(tint.opacity(0.2))
+                Capsule()
+                    .foregroundStyle(tint.opacity(0.2))
             )
         }
     }
@@ -255,8 +260,6 @@ extension HomeView {
     }
     
     struct JobApplicationCard: View {
-        @Environment(\.colorScheme) private var colorScheme
-        
         let application: JobApplication
 
         var body: some View {
@@ -293,7 +296,7 @@ extension HomeView {
             .background(
                 RoundedRectangle(cornerRadius: 14)
                     .foregroundStyle(.cardBackground)
-                    .shadow(color: colorScheme == .dark ? .clear : .black.opacity(0.2),  radius: 6)
+                    .shadow(color: .black.opacity(0.1),  radius: 6)
             )
         }
     }
@@ -378,9 +381,12 @@ extension HomeView {
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(color)
-                    .opacity(0.2)
-                    .shadow(radius: 1)
+                    .foregroundStyle(color.opacity(0.2))
+            )
+            .background(
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(.appBackground)
+                    .shadow(color: .black.opacity(0.1), radius: 1)
             )
         }
     }
@@ -388,18 +394,25 @@ extension HomeView {
 
 // MARK: - Floating Buttons
 extension HomeView {
-    struct AddButton: View {
+    struct FloatingButton: View {
+        let image: String
+        var backgroundColor: Color = .blue
+        var imageTint: Color = .white
+        var font: Font = .largeTitle
+        
         let action: () -> Void
         
         var body: some View {
             Button {
                 action()
             } label: {
-                Image(systemName: "plus")
-                    .font(.largeTitle)
+                Image(systemName: image)
+                    .font(font)
                     .fontWeight(.bold)
                     .frame(width: 50, height: 50)
+                    .foregroundStyle(imageTint)
             }
+            .tint(backgroundColor)
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.circle)
             .shadow(radius: 2)
@@ -407,4 +420,15 @@ extension HomeView {
             .padding(.trailing, 10)
         }
     }
+}
+
+#Preview {
+    let container = try! ModelContainer(
+        for: JobApplication.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    let coordinator = HomeCoordinator(modelContainer: container)
+    
+    HomeView(viewModel: coordinator.homeViewModel)
+        .modelContainer(container)
 }
