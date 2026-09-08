@@ -67,13 +67,14 @@ extension EditJobApplicationView {
         
         var body: some View {
             CustomSection {
-                HeaderView(text: "OVERALL EXPERIENCE · optional")
-                TextField("Notes about the process", text: $overallExperience.unwrapped(), axis: .vertical)
+                HeaderView(text: "Notes · optional")
+                TextField("Notes about the process, the team, or the work environment", text: $overallExperience.unwrapped(), axis: .vertical)
                     .lineLimit(4...)
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 10)
                             .fill(.cardBackground)
+                            .shadow(color: .black.opacity(0.1), radius: 4)
                     )
             }
         }
@@ -86,12 +87,12 @@ extension EditJobApplicationView {
         @Binding var rating: Int?
         
         private let maxRating = 5
-        private let offColor = Color.white.opacity(0.2)
+        private let offColor = Color.secondary.opacity(0.2)
         private let onColor = Color.blue
         
         var body: some View {
             CustomSection {
-                HeaderView(text: "RATING · optional")
+                HeaderView(text: "Rating · optional")
                 HStack {
                     ForEach(1...maxRating, id: \.self) { number in
                         Button {
@@ -121,13 +122,14 @@ extension EditJobApplicationView {
         
         var body: some View {
             CustomSection {
-                HeaderView(text: "APPLICATION DATE")
+                HeaderView(text: "Date Applied")
                 DatePicker("", selection: $date.unwrapped(), in: ...Date(), displayedComponents: .date)
                     .datePickerStyle(.graphical)
                     .padding(.horizontal)
                     .background(
                         RoundedRectangle(cornerRadius: 10)
                             .fill(.cardBackground)
+                            .shadow(color: .black.opacity(0.1), radius: 6)
                     )
             }
         }
@@ -143,7 +145,7 @@ extension EditJobApplicationView {
 
         var body: some View {
             CustomSection {
-                HeaderView(text: "INTERVIEWS · optional", leadingContent: {}) {
+                HeaderView(text: "Interviews · optional", leadingContent: {}) {
                     Button {
                         addInterviewAction()
                     } label: {
@@ -239,6 +241,7 @@ extension EditJobApplicationView {
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(.cardBackground)
+                    .shadow(color: .black.opacity(0.1), radius: 4)
             )
         }
     }

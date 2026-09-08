@@ -51,7 +51,6 @@ extension EditJobApplicationViewModel {
     }
 }
 
-// MARK: - Private
 private extension EditJobApplicationViewModel {
     func presentGeneralError() {
         let generalError = JobTrackerError.generalError

@@ -40,8 +40,8 @@ extension HomeViewModel {
 
 // MARK: - Navigation
 extension HomeViewModel {
-    func filterTapped() {
-        coordinator?.presentSheet(.filter)
+    func filterTapped(filter: Binding<JobApplicationFilter>) {
+        coordinator?.presentSheet(.filter(filter))
     }
     
     func editApplicationTapped(jobApplication: JobApplication) {

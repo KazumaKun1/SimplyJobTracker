@@ -32,11 +32,11 @@ struct EditJobApplicationView: View {
             ScreenContainer {
                 VStack(spacing: 30) {
                     StatusSection(currentStatus: $jobApplication.status)
-                    TextFieldSection(title: "ROLE · optional", placeholder: "e.g. Role ABC", text: $jobApplication.role)
-                    TextFieldSection(title: "COMPANY · optional", placeholder: "e.g. Company ABC", text: $jobApplication.company)
+                    TextFieldSection(title: "Name of the Role · optional", placeholder: "e.g. Role ABC", text: $jobApplication.role)
+                    TextFieldSection(title: "Name of the Company · optional", placeholder: "e.g. Company ABC", text: $jobApplication.company)
                     OverallExperienceSection(overallExperience: $jobApplication.overallExperience)
                     RatingSection(rating: $jobApplication.rating)
-                    TextFieldSection(title: "FEELING · optional", placeholder: "How did it feel, in a few words?", text: $jobApplication.feeling)
+                    TextFieldSection(title: "How it felt · optional", placeholder: "How did it feel, in a few words?", text: $jobApplication.feeling)
                     CalendarSection(date: $jobApplication.date.toOptional(fallback: .now))
                     InterviewSection(interviews: jobApplication.interviews) {
                         viewModel.addInterview(to: jobApplication)
@@ -52,6 +52,8 @@ struct EditJobApplicationView: View {
                     .padding()
                     .id("DeleteJobApplication")
                 }
+                .padding(.horizontal)
+                .padding(.bottom)
             }
             .onChange(of: jobApplication.interviews) { _, _ in
                 withAnimation {
@@ -61,8 +63,6 @@ struct EditJobApplicationView: View {
         }
         .navigationTitle("Edit Application")
         .navigationBarTitleDisplayMode(.inline)
-        .padding(.horizontal, 8)
-        .padding(.bottom)
         .alert(item: $activeAlert) { alertType in
             switch alertType {
             case .deleteJobApplication:

@@ -37,49 +37,52 @@ struct CalendarView: UIViewRepresentable {
     }
     
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UICalendarView, context: Context) -> CGSize? {
-        let targetWidth = proposal.width ?? 350
-        let size = uiView.systemLayoutSizeFitting(
+        let targetWidth = proposal.width ?? uiView.intrinsicContentSize.width
+        return uiView.systemLayoutSizeFitting(
             CGSize(width: targetWidth, height: UIView.layoutFittingCompressedSize.height),
             withHorizontalFittingPriority: .required,
             verticalFittingPriority: .fittingSizeLevel
         )
-        return size
     }
     
     class Coordinator: NSObject, UICalendarSelectionSingleDateDelegate, UICalendarSelectionMultiDateDelegate {
         var representable: CalendarView
-        
+        fileprivate var rangeStart: DateComponents?
+
         init(_ representable: CalendarView) {
             self.representable = representable
         }
-        
+
         func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
             if case .single(let binding) = representable.mode {
                 binding.wrappedValue = dateComponents?.date
             }
         }
-        
+
         func multiDateSelection(_ selection: UICalendarSelectionMultiDate, didSelectDate dateComponents: DateComponents) {
-            processRange(from: selection)
+            handleTap(dateComponents, on: selection)
         }
-        
+
         func multiDateSelection(_ selection: UICalendarSelectionMultiDate, didDeselectDate dateComponents: DateComponents) {
-            processRange(from: selection)
+            handleTap(dateComponents, on: selection)
         }
-        
-        private func processRange(from selection: UICalendarSelectionMultiDate) {
+
+        private func handleTap(_ dateComponents: DateComponents, on selection: UICalendarSelectionMultiDate) {
             guard case .multi(let binding) = representable.mode else { return }
-            
-            let sortedDates = selection.selectedDates
-                .compactMap { $0.date }
-                .sorted()
-            
-            guard let firstDate = sortedDates.first, let lastDate = sortedDates.last else {
-                binding.wrappedValue = nil
-                return
+            let calendar = Calendar.current
+
+            guard let tappedDate = dateComponents.date else { return }
+
+            if let start = rangeStart, let startDate = start.date {
+                let range = min(startDate, tappedDate)...max(startDate, tappedDate)
+                selection.setSelectedDates(calendar.components(from: range), animated: true)
+                binding.wrappedValue = range
+                rangeStart = nil
+            } else {
+                selection.setSelectedDates([dateComponents], animated: true)
+                rangeStart = dateComponents
+                binding.wrappedValue = tappedDate...tappedDate
             }
-            
-            binding.wrappedValue = firstDate...lastDate
         }
     }
 }
@@ -90,8 +93,9 @@ private extension CalendarView {
         
         switch mode {
         case .single(let binding):
+            context.coordinator.rangeStart = nil
             let targetComponents = calendar.components(from: binding.wrappedValue)
-            
+
             if let currentBehavior = calendarView.selectionBehavior as? UICalendarSelectionSingleDate {
                 if currentBehavior.selectedDate != targetComponents {
                     currentBehavior.setSelected(targetComponents, animated: true)
@@ -103,7 +107,11 @@ private extension CalendarView {
             }
         case .multi(let binding):
             let targetComponentList = calendar.components(from: binding.wrappedValue)
-            
+
+            if binding.wrappedValue == nil {
+                context.coordinator.rangeStart = nil
+            }
+
             if let currentBehavior = calendarView.selectionBehavior as? UICalendarSelectionMultiDate {
                 let selectedSet = Set(currentBehavior.selectedDates)
                 if selectedSet != Set(targetComponentList) {

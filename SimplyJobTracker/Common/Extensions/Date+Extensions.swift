@@ -25,4 +25,12 @@ extension Date {
         default:         return "\(seconds / 2419200)mo"
         }
     }
+    
+    func relativeRange(days: Int) -> ClosedRange<Date> {
+        let relativeDate = Calendar.current.date(byAdding: .day, value: days, to: self) ?? self
+        
+        return days >= 0 ? self...relativeDate : relativeDate...self
+    }
 }
+
+

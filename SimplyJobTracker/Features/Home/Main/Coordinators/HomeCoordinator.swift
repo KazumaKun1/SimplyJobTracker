@@ -14,7 +14,7 @@ nonisolated enum HomeRoute: Hashable {
 }
 
 enum HomeSheetRoute: Identifiable {
-    case filter
+    case filter(Binding<JobApplicationFilter>)
 
     var id: String {
         switch self {
@@ -75,8 +75,8 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
     @ViewBuilder
     func build(sheet: HomeSheetRoute) -> some View {
         switch sheet {
-        case .filter:
-            Text("")
+        case .filter(let filter):
+            FilterView(filter: filter)
         }
     }
 }
