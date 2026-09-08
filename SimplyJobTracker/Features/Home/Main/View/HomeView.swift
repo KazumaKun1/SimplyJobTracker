@@ -32,7 +32,8 @@ struct HomeView: View {
                     return false
                 }
             case .range(let closedRange):
-                if !closedRange.contains(application.date) {
+                let applicationDay = Calendar.current.startOfDay(for: application.date)
+                if !closedRange.contains(applicationDay) {
                     return false
                 }
             }

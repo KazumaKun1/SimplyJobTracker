@@ -93,8 +93,9 @@ private extension CalendarView {
         
         switch mode {
         case .single(let binding):
+            context.coordinator.rangeStart = nil
             let targetComponents = calendar.components(from: binding.wrappedValue)
-            
+
             if let currentBehavior = calendarView.selectionBehavior as? UICalendarSelectionSingleDate {
                 if currentBehavior.selectedDate != targetComponents {
                     currentBehavior.setSelected(targetComponents, animated: true)
