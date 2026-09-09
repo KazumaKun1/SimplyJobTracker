@@ -15,10 +15,12 @@ nonisolated enum HomeRoute: Hashable {
 
 enum HomeSheetRoute: Identifiable {
     case filter(Binding<JobApplicationFilter>)
+    case search([JobApplication])
 
     var id: String {
         switch self {
         case .filter: "filter"
+        case .search: "search"
         }
     }
 }
@@ -77,6 +79,8 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
         switch sheet {
         case .filter(let filter):
             FilterView(filter: filter)
+        case .search(let applications):
+            SearchView(applications: applications, onSelect: homeViewModel.editApplicationTapped)
         }
     }
 }
