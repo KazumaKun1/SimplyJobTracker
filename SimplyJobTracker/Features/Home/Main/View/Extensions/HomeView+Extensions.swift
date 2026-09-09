@@ -127,10 +127,12 @@ extension HomeView {
         let numberOfItems: Int
 
         var body: some View {
-            HStack(spacing: 8) {
-                FavoriteTag(isFavorite: filter.isFavorite)
-                StatusFilterTag(status: filter.status, numberOfItems: numberOfItems)
-                DateFilterTag(container: filter.dateContainer)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    FavoriteTag(isFavorite: filter.isFavorite)
+                    StatusFilterTag(status: filter.status, numberOfItems: numberOfItems)
+                    DateFilterTag(container: filter.dateContainer)
+                }
             }
         }
     }
@@ -192,7 +194,7 @@ extension HomeView {
         var body: some View {
             if isFavorite != nil {
                 FilterTagCapsule(
-                    text: "Favorites"
+                    text: "★ Favorites"
                 ) {
                     self.isFavorite = nil
                 }

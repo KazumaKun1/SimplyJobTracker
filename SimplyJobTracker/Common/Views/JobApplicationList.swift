@@ -20,7 +20,7 @@ struct JobApplicationList: View {
                     JobApplicationCard(application: application)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("\(application.role ?? "Untitled Role") at \(application.company ?? "Untitled Company"), \(application.status.title)")
+                .accessibilityLabel("\(application.role ?? "Untitled Role") at \(application.company ?? "Untitled Company"), \(application.status.title)\(application.isFavorite ? ", Favorite" : "")")
             }
         }
         .padding(.bottom)
