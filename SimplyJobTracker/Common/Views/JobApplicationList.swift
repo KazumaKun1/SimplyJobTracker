@@ -58,6 +58,11 @@ struct JobApplicationCard: View {
                 }
             }
             Spacer()
+            if application.isFavorite {
+                Image(systemName: "star.fill")
+                    .font(.caption2)
+                    .foregroundStyle(.yellow)
+            }
             Text(application.date, format: .dateTime.month(.abbreviated).day())
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -69,4 +74,8 @@ struct JobApplicationCard: View {
                 .shadow(color: .black.opacity(0.1),  radius: 6)
         )
     }
+}
+
+#Preview {
+    JobApplicationCard(application: JobApplication(isFavorite: true))
 }

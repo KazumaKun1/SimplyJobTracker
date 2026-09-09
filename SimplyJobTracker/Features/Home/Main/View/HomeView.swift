@@ -24,6 +24,10 @@ struct HomeView: View {
                 return false
             }
             
+            if let isFavorite = filter.isFavorite, application.isFavorite != isFavorite {
+                return false
+            }
+            
             switch filter.dateContainer.selection {
             case .none:
                 break
@@ -97,10 +101,14 @@ struct HomeView: View {
                     } label: {
                         Image(systemName: "magnifyingglass")
                     }
-                } trailingContent: {
-                    FilterTagView(filter: $filter, numberOfItems: filteredResultsCount)
                 }
-                .padding(.vertical)
+                .padding(.top)
+
+                if filter.hasActiveFilters {
+                    FilterTagView(filter: $filter, numberOfItems: filteredResultsCount)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.bottom, 8)
+                }
 
                 if filteredApplications.isEmpty {
                     NoJobApplicationView(isFiltered: !jobApplications.isEmpty)

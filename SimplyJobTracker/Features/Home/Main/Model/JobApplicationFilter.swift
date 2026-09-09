@@ -9,7 +9,12 @@ import Foundation
 
 struct JobApplicationFilter {
     var status: JobApplicationStatus?
+    var isFavorite: Bool?
     var dateContainer = DateContainer()
+
+    var hasActiveFilters: Bool {
+        status != nil || isFavorite != nil || dateContainer.isActive
+    }
 }
 
 struct DateContainer {
@@ -21,6 +26,11 @@ struct DateContainer {
 
     var selection: Selection = .none
     var rangePreset: DateRangeSelection?
+
+    var isActive: Bool {
+        if case .none = selection { return false }
+        return true
+    }
 
     var singleDate: Date? {
         get { if case .single(let date) = selection { return date }; return nil }

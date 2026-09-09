@@ -14,7 +14,7 @@ struct FilterView: View {
         ScreenContainer(color: .cardBackground, scrollTrigger: filter.dateContainer.rangePreset == .custom) {
             VStack {
                 FilterHeader()
-                
+                FavoriteSection(isFavorite: $filter.isFavorite)
                 StatusSection(currentStatus: $filter.status)
                 Divider()
                     .padding(.vertical)
