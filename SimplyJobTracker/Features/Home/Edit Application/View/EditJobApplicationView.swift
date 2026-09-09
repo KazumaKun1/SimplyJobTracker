@@ -63,6 +63,16 @@ struct EditJobApplicationView: View {
         }
         .navigationTitle("Edit Application")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    jobApplication.isFavorite.toggle()
+                } label: {
+                    Image(systemName: jobApplication.isFavorite ? "star.fill" : "star")
+                        .foregroundStyle(jobApplication.isFavorite ? Color.yellow : .primary)
+                }
+            }
+        }
         .alert(item: $activeAlert) { alertType in
             switch alertType {
             case .deleteJobApplication:

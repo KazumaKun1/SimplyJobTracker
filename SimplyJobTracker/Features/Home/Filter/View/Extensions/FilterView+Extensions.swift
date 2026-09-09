@@ -7,6 +7,38 @@
 
 import SwiftUI
 
+// MARK: - Favorite Section
+extension FilterView {
+    struct FavoriteSection: View {
+        @Binding var isFavorite: Bool?
+
+        private var isOn: Binding<Bool> {
+            Binding(
+                get: { isFavorite ?? false },
+                set: { isFavorite = $0 ? true : nil }
+            )
+        }
+
+        var body: some View {
+            HStack {
+                Image(systemName: isOn.wrappedValue ? "star.fill" : "star")
+                    .foregroundStyle(isOn.wrappedValue ? Color.yellow : .primary)
+                Spacer()
+                Toggle("Favorites only", isOn: isOn)
+                    .tint(.yellow)
+                    .fontWeight(isOn.wrappedValue ? .semibold : .regular)
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .foregroundStyle(isOn.wrappedValue ? Color.yellow.opacity(0.2) : .cardBackground2)
+            )
+            .animation(.easeInOut(duration: 0.1), value: isOn.wrappedValue)
+            .padding(.bottom)
+        }
+    }
+}
+
 // MARK: - Status Section
 extension FilterView {
     struct StatusSection: View {

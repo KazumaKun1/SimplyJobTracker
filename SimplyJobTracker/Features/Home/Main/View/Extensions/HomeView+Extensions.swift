@@ -127,9 +127,12 @@ extension HomeView {
         let numberOfItems: Int
 
         var body: some View {
-            HStack(spacing: 8) {
-                StatusFilterTag(status: filter.status, numberOfItems: numberOfItems)
-                DateFilterTag(container: filter.dateContainer)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    FavoriteTag(isFavorite: filter.isFavorite)
+                    StatusFilterTag(status: filter.status, numberOfItems: numberOfItems)
+                    DateFilterTag(container: filter.dateContainer)
+                }
             }
         }
     }
@@ -184,6 +187,20 @@ extension HomeView {
             }
         }
     }
+    
+    struct FavoriteTag: View {
+        @Binding var isFavorite: Bool?
+        
+        var body: some View {
+            if isFavorite != nil {
+                FilterTagCapsule(
+                    text: "★ Favorites"
+                ) {
+                    self.isFavorite = nil
+                }
+            }
+        }
+    }
 
     struct FilterTagCapsule: View {
         let text: String
@@ -195,8 +212,8 @@ extension HomeView {
                 Text(text)
                     .font(.caption)
                     .fontWeight(.semibold)
-                    .lineLimit(nil)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
                 Button(action: onClose) {
                     Image(systemName: "xmark")
                         .font(.caption2)
