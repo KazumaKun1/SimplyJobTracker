@@ -45,6 +45,11 @@ extension HomeViewModel {
     }
     
     func editApplicationTapped(jobApplication: JobApplication) {
+        coordinator?.dismissSheet()
         coordinator?.navigate(to: .editApplication(jobApplication))
+    }
+    
+    func searchApplicationTapped(jobApplications: [JobApplication]) {
+        coordinator?.presentSheet(.search(jobApplications))
     }
 }

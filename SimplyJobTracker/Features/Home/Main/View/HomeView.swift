@@ -93,7 +93,7 @@ struct HomeView: View {
                 
                 HeaderView(text: "APPLICATION", height: 20) {
                     Button {
-                        // TODO: - Implement the searchable sheet here
+                        viewModel.searchApplicationTapped(jobApplications: jobApplications)
                     } label: {
                         Image(systemName: "magnifyingglass")
                     }
