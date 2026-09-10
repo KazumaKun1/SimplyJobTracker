@@ -10,7 +10,7 @@ import SwiftData
 
 nonisolated enum HomeRoute: Hashable {
     case start
-    case editApplication(JobApplication)
+    case applicationDetails(JobApplication)
 }
 
 enum HomeSheetRoute: Identifiable {
@@ -69,8 +69,8 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
         switch route {
         case .start:
             HomeView(viewModel: homeViewModel)
-        case .editApplication(let application):
-            EditJobApplicationView(jobApplication: application, viewModel: editJobApplicationViewModel)
+        case .applicationDetails(let application):
+            ApplicationDetailsView(jobApplication: application, viewModel: editJobApplicationViewModel)
         }
     }
     

@@ -29,47 +29,33 @@ struct EditJobApplicationView: View {
     
     var body: some View {
         ScrollViewReader { proxy in
-            ScreenContainer {
-                VStack(spacing: 30) {
-                    StatusSection(currentStatus: $jobApplication.status)
-                    TextFieldSection(title: "Name of the Role · optional", placeholder: "e.g. Role ABC", text: $jobApplication.role)
-                    TextFieldSection(title: "Name of the Company · optional", placeholder: "e.g. Company ABC", text: $jobApplication.company)
-                    OverallExperienceSection(overallExperience: $jobApplication.overallExperience)
-                    RatingSection(rating: $jobApplication.rating)
-                    TextFieldSection(title: "How it felt · optional", placeholder: "How did it feel, in a few words?", text: $jobApplication.feeling)
-                    CalendarSection(date: $jobApplication.date.toOptional(fallback: .now))
-                    InterviewSection(interviews: jobApplication.interviews) {
-                        viewModel.addInterview(to: jobApplication)
-                    } deleteInterviewAction: { interview in
-                        activeAlert = .deleteInterview(interview)
-                    }
-                    
-                    Button(role: .destructive) {
-                        activeAlert = .deleteJobApplication
-                    } label: {
-                        Label("Delete Job Application", systemImage: "trash.fill")
-                    }
-                    .padding()
-                    .id("DeleteJobApplication")
+            VStack(spacing: 30) {
+                StatusSection(currentStatus: $jobApplication.status)
+                TextFieldSection(title: "Name of the Role · optional", placeholder: "e.g. Role ABC", text: $jobApplication.role)
+                TextFieldSection(title: "Name of the Company · optional", placeholder: "e.g. Company ABC", text: $jobApplication.company)
+                OverallExperienceSection(overallExperience: $jobApplication.overallExperience)
+                RatingSection(rating: $jobApplication.rating)
+                TextFieldSection(title: "How it felt · optional", placeholder: "How did it feel, in a few words?", text: $jobApplication.feeling)
+                CalendarSection(date: $jobApplication.date.toOptional(fallback: .now))
+                InterviewSection(interviews: jobApplication.interviews) {
+                    viewModel.addInterview(to: jobApplication)
+                } deleteInterviewAction: { interview in
+                    activeAlert = .deleteInterview(interview)
                 }
-                .padding(.horizontal)
-                .padding(.bottom)
+                
+                Button(role: .destructive) {
+                    activeAlert = .deleteJobApplication
+                } label: {
+                    Label("Delete Job Application", systemImage: "trash.fill")
+                }
+                .padding()
+                .id("DeleteJobApplication")
             }
+            .padding(.horizontal)
+            .padding(.bottom)
             .onChange(of: jobApplication.interviews) { _, _ in
                 withAnimation {
                     proxy.scrollTo("DeleteJobApplication", anchor: .bottom)
-                }
-            }
-        }
-        .navigationTitle("Edit Application")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    jobApplication.isFavorite.toggle()
-                } label: {
-                    Image(systemName: jobApplication.isFavorite ? "star.fill" : "star")
-                        .foregroundStyle(jobApplication.isFavorite ? Color.yellow : .primary)
                 }
             }
         }
