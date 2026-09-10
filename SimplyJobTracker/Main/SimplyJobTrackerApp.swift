@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import RevenueCat
 
 @main
 struct SimplyJobTrackerApp: App {
@@ -26,6 +27,18 @@ struct SimplyJobTrackerApp: App {
     @State private var coordinator: TabCoordinator
     
     init() {
+        #if DEBUG
+        Purchases.logLevel = .debug
+        #else
+        Purchases.logLevel = .error
+        #endif
+        
+        Purchases.configure(
+            with: Configuration.Builder(withAPIKey: Constants.revenueCatAPIKey)
+                .with(storeKitVersion: .storeKit2)
+                .build()
+        )
+        
         _coordinator = State(initialValue: TabCoordinator(modelContainer: sharedModelContainer))
     }
 
