@@ -79,7 +79,7 @@ extension ApplicationDetailsView {
                 VStack(alignment: .leading) {
                     Text("\(interviewCount)")
                         .font(.title)
-                    Text("Interview")
+                    Text(interviewCount == 1 ? "Interview" : "Interviews")
                         .font(.caption)
                         .foregroundStyle(.gray)
                 }
