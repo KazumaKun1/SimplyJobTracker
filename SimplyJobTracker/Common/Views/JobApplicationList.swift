@@ -35,17 +35,7 @@ struct JobApplicationCard: View {
     var body: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading) {
-                Text(application.status.title)
-                    .foregroundStyle(application.status.color)
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(application.status.color)
-                            .opacity(0.2)
-                    )
+                JobApplicationStatusView(title: application.status.title, color: application.status.color)
                 Text(application.role ?? "Untitled Role")
                     .font(.headline)
                 HStack {
@@ -73,6 +63,25 @@ struct JobApplicationCard: View {
                 .foregroundStyle(.cardBackground)
                 .shadow(color: .black.opacity(0.1),  radius: 6)
         )
+    }
+}
+
+struct JobApplicationStatusView: View {
+    let title: String
+    let color: Color
+    
+    var body: some View {
+        Text(title)
+            .foregroundStyle(color)
+            .font(.caption)
+            .fontWeight(.bold)
+            .padding(.vertical, 8)
+            .padding(.horizontal, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundStyle(color)
+                    .opacity(0.2)
+            )
     }
 }
 

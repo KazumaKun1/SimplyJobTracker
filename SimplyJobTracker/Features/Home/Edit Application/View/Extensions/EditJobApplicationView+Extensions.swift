@@ -274,7 +274,7 @@ extension EditJobApplicationView {
                     if isExpanded {
                         DatePicker("Select Date", selection: $interview.date, displayedComponents: [.date])
                             .datePickerStyle(.compact)
-                        TextFieldView(placeholder: "e.g. the interview asked about...", text: $interview.descriptionContent)
+                        TextFieldView(placeholder: "e.g. the interview asked about...", text: $interview.descriptionContent, lineLimit: 1...4)
                             .multilineTextAlignment(.leading)
                     }
                 }
@@ -302,13 +302,14 @@ extension EditJobApplicationView {
     struct TextFieldView: View {
         let placeholder: String
         @Binding var text: String?
+        var lineLimit: ClosedRange<Int> = 1...2
         
         @FocusState private var isFocused: Bool
         
         var body: some View {
             VStack {
                 TextField(placeholder, text: $text.unwrapped(), axis: .vertical)
-                    .lineLimit(1...2)
+                    .lineLimit(lineLimit)
                     .focused($isFocused)
                 Rectangle()
                     .frame(height: 1)
