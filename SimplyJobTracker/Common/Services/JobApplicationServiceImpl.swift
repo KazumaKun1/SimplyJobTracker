@@ -8,23 +8,21 @@
 import SwiftData
 import SwiftUI
 
-protocol JobApplicationService: AnyObject {
+protocol JobApplicationService: Actor {
     func createJobApplication() throws
     func deleteJobApplication(id: PersistentIdentifier) throws
+    func deleteAllJobApplications() throws
+    func exportCSVFile() throws -> URL
 }
 
 enum JobApplicationServiceError: Error {
     case notFound
     case deletionFailed
+    case emptyRecords
 }
 
-final class JobApplicationServiceImpl: JobApplicationService {
-    private let modelContext: ModelContext
-
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
-
+@ModelActor
+actor JobApplicationServiceImpl: JobApplicationService {
     func createJobApplication() throws {
         let jobApplication = JobApplication()
         modelContext.insert(jobApplication)
@@ -39,5 +37,24 @@ final class JobApplicationServiceImpl: JobApplicationService {
 
         modelContext.delete(jobApplication)
         try modelContext.save()
+    }
+    
+    func deleteAllJobApplications() throws {
+        try modelContext.delete(model: JobApplication.self)
+        try modelContext.save()
+    }
+    
+    private func fetchAllForExport() throws -> [JobApplicationExportRow] {
+        modelContext.rollback()
+
+        let descriptor = FetchDescriptor<JobApplication>(sortBy: [SortDescriptor(\.date)])
+        let applications = try modelContext.fetch(descriptor)
+        return applications.map(JobApplicationExportRow.init)
+    }
+
+    func exportCSVFile() throws -> URL {
+        let rows = try fetchAllForExport()
+        guard !rows.isEmpty else { throw JobApplicationServiceError.emptyRecords }
+        return try CSVExporter.writeToTemporaryFile(rows)
     }
 }

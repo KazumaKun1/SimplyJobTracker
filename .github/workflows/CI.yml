@@ -1,0 +1,22 @@
+name: CI
+
+on:
+    pull_request:
+        branches: [main]
+    push:
+        branches: [main]
+
+jobs:
+    build-and-test:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Create xcconfig
+              run: echo "REVENUECAT_API_KEY = ${{ secrets.REVENUECAT_API_KEY }}" > SimplyJobTracker/Common/Resources/Config.xcconfig
+            
+            - name: Build
+              run: xcodebuild -project SimplyJobTracker.xcodeproj -scheme SimplyJobTracker -destination 'generic/platform=iOS Simulator' build
+
+            - name: Test
+              run: xcodebuild test -project SimplyJobTracker.xcodeproj -scheme SimplyJobTracker -destination 'platform=iOS Simulator,name=iPhone 16'

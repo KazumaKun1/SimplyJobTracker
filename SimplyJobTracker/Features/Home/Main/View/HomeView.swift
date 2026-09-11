@@ -125,7 +125,9 @@ struct HomeView: View {
                     viewModel.filterTapped(filter: $filter)
                 }
                 FloatingButton(image: "plus") {
-                    viewModel.createApplication()
+                    Task {
+                        await viewModel.createApplication()
+                    }
                 }
             }
         }

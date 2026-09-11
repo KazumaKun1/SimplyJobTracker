@@ -59,26 +59,37 @@ struct EditJobApplicationView: View {
                 }
             }
         }
-        .alert(item: $activeAlert) { alertType in
+        .alert(
+            "Confirmation",
+            isPresented: Binding(
+                get: { activeAlert != nil },
+                set: { isPresented in
+                    if !isPresented {
+                        activeAlert = nil
+                    }
+                }
+            ),
+            presenting: activeAlert
+        ) { alertType in
+            Button("Cancel", role: .cancel) {}
             switch alertType {
             case .deleteJobApplication:
-                Alert(
-                    title: Text("Confirmation"),
-                    message: Text("Are you sure you want to delete this job application?"),
-                    primaryButton: .cancel(),
-                    secondaryButton: .destructive(Text("Delete")) {
-                        viewModel.deleteJobApplication(jobApplication)
+                Button("Delete", role: .destructive) {
+                    Task {
+                        await viewModel.deleteJobApplication(jobApplication)
                     }
-                )
+                }
             case .deleteInterview(let interview):
-                Alert(
-                    title: Text("Confirmation"),
-                    message: Text("Are you sure you want to delete this interview?"),
-                    primaryButton: .cancel(),
-                    secondaryButton: .destructive(Text("Delete")) {
-                        viewModel.deleteInterview(interview)
-                    }
-                )
+                Button("Delete", role: .destructive) {
+                    viewModel.deleteInterview(interview)
+                }
+            }
+        } message: { alertType in
+            switch alertType {
+            case .deleteJobApplication:
+                Text("Are you sure you want to delete this job application?")
+            case .deleteInterview:
+                Text("Are you sure you want to delete this interview?")
             }
         }
     }

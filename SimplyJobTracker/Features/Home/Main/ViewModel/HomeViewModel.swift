@@ -21,9 +21,9 @@ class HomeViewModel {
 
 // MARK: - Service
 extension HomeViewModel {
-    func createApplication() {
+    func createApplication() async {
         do {
-            try service.createJobApplication()
+            try await service.createJobApplication()
         } catch {
             let generalError = JobTrackerError.generalError
             coordinator?
