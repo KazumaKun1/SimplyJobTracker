@@ -114,12 +114,19 @@ extension SettingsViewModel {
     func eraseData() async {
         do {
             try await jobApplicationService.deleteAllJobApplications()
+
+            if case .ready(let item) = exportState {
+                try? FileManager.default.removeItem(at: item.fileURL)
+            }
+            withAnimation(.easeInOut(duration: 0.25)) {
+                exportState = .idle
+            }
         } catch {
             coordinator?
                 .presentAlert(
                     .init(
-                        title: "Tip Didn't Go Through",
-                        message: "Something went wrong on our end. You haven't been charged — feel free to try again!",
+                        title: "Erase Failed",
+                        message: "Something went wrong while deleting your data. Please try again.",
                         primaryButton: .init(title: "I understand")
                     )
                 )

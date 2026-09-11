@@ -39,7 +39,7 @@ enum CSVExporter {
     nonisolated static func writeToTemporaryFile(_ rows: [JobApplicationExportRow]) throws -> URL {
         let csv = makeCSV(from: rows)
         let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("SimplyJobTracker-Export-\(Int(Date().timeIntervalSince1970))")
+            .appendingPathComponent("SimplyJobTracker-Export-\(Int(Date().timeIntervalSince1970))-\(UUID().uuidString)")
             .appendingPathExtension("csv")
 
         try csv.write(to: url, atomically: true, encoding: .utf8)
@@ -47,7 +47,12 @@ enum CSVExporter {
     }
 
     nonisolated private static func escape(_ field: String) -> String {
-        guard field.contains(",") || field.contains("\"") || field.contains("\n") else {
+        var field = field
+        if let first = field.first, "=+-@".contains(first) {
+            field = "'\(field)"
+        }
+
+        guard field.contains(",") || field.contains("\"") || field.contains("\n") || field.contains("\r") else {
             return field
         }
 

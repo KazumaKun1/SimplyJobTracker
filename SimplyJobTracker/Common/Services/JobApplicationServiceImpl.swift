@@ -44,16 +44,16 @@ actor JobApplicationServiceImpl: JobApplicationService {
         try modelContext.save()
     }
     
-    private func fetchAllForExport() -> [JobApplicationExportRow] {
+    private func fetchAllForExport() throws -> [JobApplicationExportRow] {
         modelContext.rollback()
 
         let descriptor = FetchDescriptor<JobApplication>(sortBy: [SortDescriptor(\.date)])
-        let applications = (try? modelContext.fetch(descriptor)) ?? []
+        let applications = try modelContext.fetch(descriptor)
         return applications.map(JobApplicationExportRow.init)
     }
-    
+
     func exportCSVFile() throws -> URL {
-        let rows = fetchAllForExport()
+        let rows = try fetchAllForExport()
         guard !rows.isEmpty else { throw JobApplicationServiceError.emptyRecords }
         return try CSVExporter.writeToTemporaryFile(rows)
     }

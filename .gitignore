@@ -50,7 +50,7 @@ playground.xcworkspace
 Carthage/Build/
 
 # RevenueCat API key (local secrets, never commit)
-Config.xcconfig
+SimplyJobTracker/Common/Resources/Config.xcconfig
 
 # fastlane
 #
