@@ -12,13 +12,18 @@ import RevenueCat
 class SettingsViewModel {
     weak private var coordinator: SettingsCoordinator?
     
-    private let service: TipJarService
+    private let jobApplicationService: JobApplicationService
+    private let tipService: TipJarService
+    
+    var showThankYouMessage: Bool = false
+    private var thankYouTask: Task<Void, Never>?
     
     var packages: [Package] = []
     
-    init(service: TipJarService, coordinator: SettingsCoordinator) {
+    init(jobApplicationService: JobApplicationService, tipService: TipJarService, coordinator: SettingsCoordinator) {
+        self.jobApplicationService = jobApplicationService
+        self.tipService = tipService
         self.coordinator = coordinator
-        self.service = service
     }
 }
 
@@ -26,15 +31,18 @@ class SettingsViewModel {
 extension SettingsViewModel {
     func loadPackages() async {
         do {
-            packages = try await service.fetchPackages()
+            packages = try await tipService.fetchPackages()
         } catch {
             packages = []
         }
     }
     
-    func purchase(_ package: Package) async -> Bool {
+    func purchase(_ package: Package) async {
         do {
-            return try await service.purchase(package)
+            let isSuccessful = try await tipService.purchase(package)
+            if isSuccessful {
+                showThankYouMessageTemporarily()
+            }
         } catch {
             coordinator?
                 .presentAlert(
@@ -44,7 +52,35 @@ extension SettingsViewModel {
                         primaryButton: .init(title: "I understand")
                     )
                 )
-            return false
+        }
+    }
+    
+    private func showThankYouMessageTemporarily() {
+        thankYouTask?.cancel()
+        showThankYouMessage = true
+        
+        thankYouTask = Task {
+            try? await Task.sleep(for: .seconds(5))
+            guard !Task.isCancelled else { return }
+            showThankYouMessage = false
+        }
+    }
+}
+
+// MARK: - Erase Data
+extension SettingsViewModel {
+    func eraseData() async {
+        do {
+            try await jobApplicationService.deleteAllJobApplications()
+        } catch {
+            coordinator?
+                .presentAlert(
+                    .init(
+                        title: "Tip Didn't Go Through",
+                        message: "Something went wrong on our end. You haven't been charged — feel free to try again!",
+                        primaryButton: .init(title: "I understand")
+                    )
+                )
         }
     }
 }

@@ -18,10 +18,11 @@ final class TabCoordinator {
     var selectedTab: AppTab = .home
     
     let homeCoordinator: HomeCoordinator
-    var settingsCoordinator = SettingsCoordinator()
+    let settingsCoordinator: SettingsCoordinator
     
     init(modelContainer: ModelContainer) {
         self.homeCoordinator = HomeCoordinator(modelContainer: modelContainer)
+        self.settingsCoordinator = SettingsCoordinator(modelContainer: modelContainer)
     }
     
     func changeTab(to tab: AppTab) {

@@ -13,32 +13,45 @@ struct SettingsView: View {
     
     @Query private var applications: [JobApplication]
     
+    @State private var showEraseDataConfirmation = false
+    
     var body: some View {
         ScreenContainer {
             VStack(spacing: 16) {
                 BackupView()
                 DataPrivacyView()
-                TippingJar(packages: viewModel.packages) { package in
+                TippingJar(shouldShowThankYou: viewModel.showThankYouMessage, packages: viewModel.packages) { package in
                     Task {
                         await viewModel.purchase(package)
                     }
                 }
-                DataSection()
+                DataSection {
+                    
+                } deleteDataAction: {
+                    showEraseDataConfirmation = true
+                }
 
                 Text("\(applications.count) entries found")
                     .font(.subheadline)
                     .foregroundStyle(.gray)
             }
             .padding()
+            .animation(.easeInOut(duration: 0.5), value: viewModel.showThankYouMessage)
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.large)
         .task {
             await viewModel.loadPackages()
         }
+        .alert("Confirmation", isPresented: $showEraseDataConfirmation) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                Task {
+                    await viewModel.eraseData()
+                }
+            }
+        } message: {
+            Text("Are you sure you want to erase all job applications?")
+        }
     }
-}
-
-#Preview {
-    SettingsView(viewModel: .init(service: TipJarServiceImpl(), coordinator: .init()))
 }

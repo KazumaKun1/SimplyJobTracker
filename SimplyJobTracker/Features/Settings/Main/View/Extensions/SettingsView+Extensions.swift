@@ -58,32 +58,40 @@ extension SettingsView {
 // MARK: - Tipping Jar
 extension SettingsView {
     struct TippingJar: View {
+        var shouldShowThankYou: Bool
         let packages: [Package]
         let onPurchase: (Package) -> ()
         
         var body: some View {
             VStack(spacing: 12) {
-                Image(systemName: "heart")
+                Image(systemName: shouldShowThankYou ? "heart.fill" : "heart")
                     .font(.largeTitle)
+                    .foregroundStyle(shouldShowThankYou ? .red : .primary)
+                    .contentTransition(.symbolEffect(.replace))
+                
                 Text("Support this app")
                     .font(.headline)
-                Text("SimplyJobTracker is built and maintained independently. If it's helped you, a small goes a long way.")
+                
+                Text(shouldShowThankYou ? "Thank you—that genuinely helps." : "SimplyJobTracker is built and maintained independently. If it's helped you, a small tip goes a long way.")
                     .font(.subheadline)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.gray)
+                    .contentTransition(.opacity)
                 
-                HStack {
-                    ForEach(packages) { package in
-                        Button {
+                Group {
+                    if !packages.isEmpty {
+                        PackageView(packages: packages) { package in
                             onPurchase(package)
-                        } label: {
-                            VStack {
-                                Text(package.storeProduct.localizedTitle)
-                                Text(package.storeProduct.localizedPriceString)
-                            }
                         }
+                        .opacity(shouldShowThankYou ? 0 : 1)
+                    } else {
+                        Text("Tipping Unavailable")
+                            .font(.callout)
+                            .foregroundStyle(.gray)
                     }
                 }
+                .frame(height: shouldShowThankYou ? 0 : nil, alignment: .top)
+                .clipped()
             }
             .padding()
             .frame(maxWidth: .infinity)
@@ -91,6 +99,37 @@ extension SettingsView {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(.cardBackground)
             )
+            .animation(.easeInOut(duration: 0.5), value: packages.isEmpty)
+        }
+    }
+    
+    struct PackageView: View {
+        let packages: [Package]
+        let action: (Package) -> Void
+        
+        var body: some View {
+            HStack(spacing: 8) {
+                ForEach(packages) { package in
+                    Button {
+                        action(package)
+                    } label: {
+                        VStack(spacing: 6) {
+                            Text(package.storeProduct.localizedTitle)
+                                .fontWeight(.semibold)
+                                .font(.caption)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 8)
+                        .foregroundStyle(.white)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(.blue)
+                        )
+                    }
+                }
+            }
+            .transition(.opacity)
         }
     }
 }
@@ -98,18 +137,21 @@ extension SettingsView {
 // MARK: - Data Section
 extension SettingsView {
     struct DataSection: View {
+        let exportCSVAction: () -> ()
+        let deleteDataAction: () -> ()
+        
         var body: some View {
             HeaderView(text: "DATA")
             VStack(alignment: .leading, spacing: 0) {
                 Button {
-
+                    exportCSVAction()
                 } label: {
                     Text("Export as CSV")
                 }
                 Divider()
                     .padding(.vertical)
                 Button(role: .destructive) {
-
+                    deleteDataAction()
                 } label: {
                     Text("Clear all data")
                 }
@@ -121,8 +163,4 @@ extension SettingsView {
             )
         }
     }
-}
-
-#Preview {
-    SettingsView(viewModel: .init(service: TipJarServiceImpl(), coordinator: .init()))
 }

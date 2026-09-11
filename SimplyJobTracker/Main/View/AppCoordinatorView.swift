@@ -78,6 +78,31 @@ private extension AppCoordinatorView {
                         coordinator.build(route: route)
                     }
             }
+            .alert(
+                coordinator.presentAlert?.title ?? "",
+                isPresented: Binding(
+                    get: { coordinator.presentAlert != nil },
+                    set: { if !$0 { coordinator.dismissAlert() } }
+                ),
+                presenting: coordinator.presentAlert
+            ) { config in
+                Button(
+                    config.primaryButton.title,
+                    role: config.primaryButton.role,
+                    action: config.primaryButton.action
+                )
+                if let secondary = config.secondaryButton {
+                    Button(
+                        secondary.title,
+                        role: secondary.role,
+                        action: secondary.action
+                    )
+                }
+            } message: { config in
+                if let message = config.message {
+                    Text(message)
+                }
+            }
         }
     }
 }

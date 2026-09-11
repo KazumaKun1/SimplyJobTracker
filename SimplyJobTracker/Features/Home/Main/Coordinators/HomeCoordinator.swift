@@ -38,7 +38,7 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
     private let modelContainer: ModelContainer
 
     @ObservationIgnored
-    private lazy var jobApplicationService: JobApplicationService = JobApplicationServiceImpl(modelContext: modelContainer.mainContext)
+    private lazy var jobApplicationService: JobApplicationService = JobApplicationServiceImpl(modelContainer: modelContainer)
 
     @ObservationIgnored
     private lazy var interviewService: InterviewService = InterviewServiceImpl(modelContext: modelContainer.mainContext)

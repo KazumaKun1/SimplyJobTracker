@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 nonisolated enum SettingsRoute: Hashable {
     case start
@@ -20,13 +21,23 @@ class SettingsCoordinator: NavigationCoordinator, AlertCoordinator {
     
     var path: NavigationPath = NavigationPath()
     
+    private let modelContainer: ModelContainer
+    
+    @ObservationIgnored
+    private lazy var jobApplicationService: JobApplicationService = JobApplicationServiceImpl(modelContainer: modelContainer)
+    
     @ObservationIgnored
     lazy var settingsViewModel: SettingsViewModel = {
         SettingsViewModel(
-            service: TipJarServiceImpl(),
+            jobApplicationService: jobApplicationService,
+            tipService: TipJarServiceImpl(),
             coordinator: self
         )
     }()
+    
+    init(modelContainer: ModelContainer) {
+        self.modelContainer = modelContainer
+    }
     
     @ViewBuilder
     func build(route: SettingsRoute) -> some View {

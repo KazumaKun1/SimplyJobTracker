@@ -41,9 +41,9 @@ extension EditJobApplicationViewModel {
         }
     }
 
-    func deleteJobApplication(_ jobApplication: JobApplication) {
+    func deleteJobApplication(_ jobApplication: JobApplication) async {
         do {
-            try jobApplicationService.deleteJobApplication(id: jobApplication.persistentModelID)
+            try await jobApplicationService.deleteJobApplication(id: jobApplication.persistentModelID)
             coordinator?.pop()
         } catch {
             presentGeneralError()

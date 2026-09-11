@@ -8,9 +8,10 @@
 import SwiftData
 import SwiftUI
 
-protocol JobApplicationService: AnyObject {
+protocol JobApplicationService: Actor {
     func createJobApplication() throws
     func deleteJobApplication(id: PersistentIdentifier) throws
+    func deleteAllJobApplications() throws
 }
 
 enum JobApplicationServiceError: Error {
@@ -18,13 +19,8 @@ enum JobApplicationServiceError: Error {
     case deletionFailed
 }
 
-final class JobApplicationServiceImpl: JobApplicationService {
-    private let modelContext: ModelContext
-
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
-
+@ModelActor
+actor JobApplicationServiceImpl: JobApplicationService {
     func createJobApplication() throws {
         let jobApplication = JobApplication()
         modelContext.insert(jobApplication)
@@ -38,6 +34,11 @@ final class JobApplicationServiceImpl: JobApplicationService {
         }
 
         modelContext.delete(jobApplication)
+        try modelContext.save()
+    }
+    
+    func deleteAllJobApplications() throws {
+        try modelContext.delete(model: JobApplication.self)
         try modelContext.save()
     }
 }

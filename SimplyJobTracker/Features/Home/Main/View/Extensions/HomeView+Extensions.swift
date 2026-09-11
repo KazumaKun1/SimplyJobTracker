@@ -281,7 +281,7 @@ extension HomeView {
             ])
             let secondaryPage = MetricPage(id: 1, tiles: [
                 TileData(status: .rejected, number: statusCount[.rejected] ?? 0),
-                TileData(status: .passed, number: statusCount[.passed] ?? 0)
+                TileData(status: .ghosted, number: statusCount[.ghosted] ?? 0)
             ])
             
             return [primaryPage, secondaryPage]

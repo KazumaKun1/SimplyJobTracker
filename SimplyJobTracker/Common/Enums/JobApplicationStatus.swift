@@ -12,7 +12,7 @@ enum JobApplicationStatus: String, CaseIterable, Codable {
     case interviewing
     case offer
     case rejected
-    case passed
+    case ghosted
     
     var title: String {
         self.rawValue.capitalized
@@ -24,7 +24,7 @@ enum JobApplicationStatus: String, CaseIterable, Codable {
         case .interviewing: .yellow
         case .offer: .green
         case .rejected: .gray
-        case .passed: .pink.mix(with: .white, by: 0.3)
+        case .ghosted: .pink.mix(with: .white, by: 0.3)
         }
     }
 }
