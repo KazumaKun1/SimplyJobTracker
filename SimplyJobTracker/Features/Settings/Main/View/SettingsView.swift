@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
-    var viewModel: SettingsViewModel
+    @Bindable var viewModel: SettingsViewModel
     
     @Query private var applications: [JobApplication]
     
@@ -25,8 +25,10 @@ struct SettingsView: View {
                         await viewModel.purchase(package)
                     }
                 }
-                DataSection {
-                    
+                DataSection(isDisabled: applications.isEmpty, exportState: viewModel.exportState) {
+                    Task {
+                        await viewModel.generateCSVFile()
+                    }
                 } deleteDataAction: {
                     showEraseDataConfirmation = true
                 }
@@ -42,6 +44,9 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.large)
         .task {
             await viewModel.loadPackages()
+        }
+        .onAppear {
+            viewModel.exportState = .idle
         }
         .alert("Confirmation", isPresented: $showEraseDataConfirmation) {
             Button("Cancel", role: .cancel) {}

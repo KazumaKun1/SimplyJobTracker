@@ -12,11 +12,13 @@ protocol JobApplicationService: Actor {
     func createJobApplication() throws
     func deleteJobApplication(id: PersistentIdentifier) throws
     func deleteAllJobApplications() throws
+    func exportCSVFile() throws -> URL
 }
 
 enum JobApplicationServiceError: Error {
     case notFound
     case deletionFailed
+    case emptyRecords
 }
 
 @ModelActor
@@ -40,5 +42,19 @@ actor JobApplicationServiceImpl: JobApplicationService {
     func deleteAllJobApplications() throws {
         try modelContext.delete(model: JobApplication.self)
         try modelContext.save()
+    }
+    
+    private func fetchAllForExport() -> [JobApplicationExportRow] {
+        modelContext.rollback()
+
+        let descriptor = FetchDescriptor<JobApplication>(sortBy: [SortDescriptor(\.date)])
+        let applications = (try? modelContext.fetch(descriptor)) ?? []
+        return applications.map(JobApplicationExportRow.init)
+    }
+    
+    func exportCSVFile() throws -> URL {
+        let rows = fetchAllForExport()
+        guard !rows.isEmpty else { throw JobApplicationServiceError.emptyRecords }
+        return try CSVExporter.writeToTemporaryFile(rows)
     }
 }

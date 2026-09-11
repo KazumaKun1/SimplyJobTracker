@@ -137,16 +137,39 @@ extension SettingsView {
 // MARK: - Data Section
 extension SettingsView {
     struct DataSection: View {
+        let isDisabled: Bool
+        let exportState: ExportState
         let exportCSVAction: () -> ()
         let deleteDataAction: () -> ()
-        
+
         var body: some View {
             HeaderView(text: "DATA")
             VStack(alignment: .leading, spacing: 0) {
-                Button {
-                    exportCSVAction()
-                } label: {
-                    Text("Export as CSV")
+                Group {
+                    switch exportState {
+                    case .idle:
+                        Button {
+                            exportCSVAction()
+                        } label: {
+                            Label("Export as CSV", systemImage: "square.and.arrow.up")
+                        }
+                        .transition(.opacity)
+                    case .generating:
+                        HStack {
+                            ProgressView()
+                            Text("Generating CSV...")
+                                .foregroundStyle(.gray)
+                        }
+                        .transition(.opacity)
+                    case .ready(let item):
+                        ShareLink(
+                            item: item,
+                            preview: SharePreview("Exported Data.csv", image: Image(systemName: "tablecells"))
+                        ) {
+                            Label("CSV available for export", systemImage: "square.and.arrow.up")
+                        }
+                        .transition(.opacity)
+                    }
                 }
                 Divider()
                     .padding(.vertical)
@@ -155,6 +178,7 @@ extension SettingsView {
                 } label: {
                     Text("Clear all data")
                 }
+                .disabled(isDisabled)
             }
             .padding()
             .background(

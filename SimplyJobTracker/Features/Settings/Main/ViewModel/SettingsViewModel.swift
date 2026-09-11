@@ -8,6 +8,12 @@
 import SwiftUI
 import RevenueCat
 
+enum ExportState: Equatable {
+    case idle
+    case generating
+    case ready(CSVExportItem)
+}
+
 @Observable
 class SettingsViewModel {
     weak private var coordinator: SettingsCoordinator?
@@ -19,6 +25,8 @@ class SettingsViewModel {
     private var thankYouTask: Task<Void, Never>?
     
     var packages: [Package] = []
+    
+    var exportState: ExportState = .idle
     
     init(jobApplicationService: JobApplicationService, tipService: TipJarService, coordinator: SettingsCoordinator) {
         self.jobApplicationService = jobApplicationService
@@ -65,6 +73,40 @@ extension SettingsViewModel {
             showThankYouMessage = false
         }
     }
+}
+
+// MARK: - Export CSV
+extension SettingsViewModel {
+    func generateCSVFile() async {
+         withAnimation(.easeInOut(duration: 0.25)) {
+             exportState = .generating
+         }
+         do {
+             async let minimumDelay: Void = Task.sleep(for: .seconds(1))
+             let url = try await jobApplicationService.exportCSVFile()
+             _ = try? await minimumDelay
+
+             withAnimation(.easeInOut(duration: 0.25)) {
+                 exportState = .ready(CSVExportItem(fileURL: url))
+             }
+         } catch JobApplicationServiceError.emptyRecords {
+             withAnimation(.easeInOut(duration: 0.25)) {
+                 exportState = .idle
+             }
+         } catch {
+             withAnimation(.easeInOut(duration: 0.25)) {
+                 exportState = .idle
+             }
+             coordinator?
+                 .presentAlert(
+                     .init(
+                         title: "Export Failed",
+                         message: "Something went wrong while creating your CSV file. Please try again.",
+                         primaryButton: .init(title: "I understand")
+                     )
+                 )
+         }
+     }
 }
 
 // MARK: - Erase Data
