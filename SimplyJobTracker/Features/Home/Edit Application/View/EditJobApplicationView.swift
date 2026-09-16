@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct EditJobApplicationView: View {
     enum AlertType: Identifiable {
@@ -57,6 +58,9 @@ struct EditJobApplicationView: View {
                 withAnimation {
                     proxy.scrollTo("DeleteJobApplication", anchor: .bottom)
                 }
+            }
+            .onChange(of: jobApplication.status) { _, _ in
+                WidgetCenter.shared.reloadAllTimelines()
             }
         }
         .alert(

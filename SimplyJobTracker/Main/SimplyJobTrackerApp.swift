@@ -11,18 +11,7 @@ import RevenueCat
 
 @main
 struct SimplyJobTrackerApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            JobApplication.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    let sharedModelContainer: ModelContainer = SharedModelContainer.shared
     
     @State private var coordinator: TabCoordinator
     

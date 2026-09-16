@@ -7,10 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC0041CC3059265B0051B2BE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC0041CB3059265B0051B2BE /* WidgetKit.framework */; };
+		CC0041CE3059265B0051B2BE /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC0041CD3059265B0051B2BE /* SwiftUI.framework */; };
+		CC0041DB3059265C0051B2BE /* SimplyJobTrackerWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CC0041C93059265B0051B2BE /* SimplyJobTrackerWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CC0A0C313052EB350039795D /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = CC0A0C303052EB350039795D /* RevenueCat */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		CC0041D93059265C0051B2BE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CCA8CC19301DDA3B00C83316 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CC0041C83059265B0051B2BE;
+			remoteInfo = SimplyJobTrackerWidgetExtension;
+		};
 		CCA8CC31301DDA3C00C83316 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CCA8CC19301DDA3B00C83316 /* Project object */;
@@ -27,13 +37,51 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		CC0041E03059265C0051B2BE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CC0041DB3059265C0051B2BE /* SimplyJobTrackerWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		CC0041C93059265B0051B2BE /* SimplyJobTrackerWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SimplyJobTrackerWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC0041CB3059265B0051B2BE /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		CC0041CD3059265B0051B2BE /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		CC0041F2305A96960051B2BE /* SimplyJobTrackerWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SimplyJobTrackerWidgetExtension.entitlements; sourceTree = "<group>"; };
 		CCA8CC21301DDA3B00C83316 /* SimplyJobTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimplyJobTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCA8CC30301DDA3C00C83316 /* SimplyJobTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimplyJobTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCA8CC3A301DDA3C00C83316 /* SimplyJobTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimplyJobTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CC0041DF3059265C0051B2BE /* Exceptions for "SimplyJobTrackerWidget" folder in "SimplyJobTrackerWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CC0041C83059265B0051B2BE /* SimplyJobTrackerWidgetExtension */;
+		};
+		CC0041E530593C260051B2BE /* Exceptions for "SimplyJobTracker" folder in "SimplyJobTrackerWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Common/Constants/Constants.swift,
+				Common/Enums/JobApplicationStatus.swift,
+				"Common/Extensions/Color+Extensions.swift",
+				Common/Resources/SharedModelContainer.swift,
+				Common/Views/HeaderView.swift,
+				Features/Home/Main/Model/Interview.swift,
+				Features/Home/Main/Model/JobApplication.swift,
+			);
+			target = CC0041C83059265B0051B2BE /* SimplyJobTrackerWidgetExtension */;
+		};
 		CC0A107430532AF80039795D /* Exceptions for "SimplyJobTracker" folder in "SimplyJobTracker" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -45,10 +93,19 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		CC0041CF3059265B0051B2BE /* SimplyJobTrackerWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CC0041DF3059265C0051B2BE /* Exceptions for "SimplyJobTrackerWidget" folder in "SimplyJobTrackerWidgetExtension" target */,
+			);
+			path = SimplyJobTrackerWidget;
+			sourceTree = "<group>";
+		};
 		CCA8CC23301DDA3B00C83316 /* SimplyJobTracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				CC0A107430532AF80039795D /* Exceptions for "SimplyJobTracker" folder in "SimplyJobTracker" target */,
+				CC0041E530593C260051B2BE /* Exceptions for "SimplyJobTracker" folder in "SimplyJobTrackerWidgetExtension" target */,
 			);
 			path = SimplyJobTracker;
 			sourceTree = "<group>";
@@ -66,6 +123,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CC0041C63059265B0051B2BE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC0041CE3059265B0051B2BE /* SwiftUI.framework in Frameworks */,
+				CC0041CC3059265B0051B2BE /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CCA8CC1E301DDA3B00C83316 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -91,12 +157,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CC0041CA3059265B0051B2BE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CC0041CB3059265B0051B2BE /* WidgetKit.framework */,
+				CC0041CD3059265B0051B2BE /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CCA8CC18301DDA3B00C83316 = {
 			isa = PBXGroup;
 			children = (
+				CC0041F2305A96960051B2BE /* SimplyJobTrackerWidgetExtension.entitlements */,
 				CCA8CC23301DDA3B00C83316 /* SimplyJobTracker */,
 				CCA8CC33301DDA3C00C83316 /* SimplyJobTrackerTests */,
 				CCA8CC3D301DDA3C00C83316 /* SimplyJobTrackerUITests */,
+				CC0041CF3059265B0051B2BE /* SimplyJobTrackerWidget */,
+				CC0041CA3059265B0051B2BE /* Frameworks */,
 				CCA8CC22301DDA3B00C83316 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,6 +185,7 @@
 				CCA8CC21301DDA3B00C83316 /* SimplyJobTracker.app */,
 				CCA8CC30301DDA3C00C83316 /* SimplyJobTrackerTests.xctest */,
 				CCA8CC3A301DDA3C00C83316 /* SimplyJobTrackerUITests.xctest */,
+				CC0041C93059265B0051B2BE /* SimplyJobTrackerWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -114,6 +193,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		CC0041C83059265B0051B2BE /* SimplyJobTrackerWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC0041DC3059265C0051B2BE /* Build configuration list for PBXNativeTarget "SimplyJobTrackerWidgetExtension" */;
+			buildPhases = (
+				CC0041C53059265B0051B2BE /* Sources */,
+				CC0041C63059265B0051B2BE /* Frameworks */,
+				CC0041C73059265B0051B2BE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CC0041CF3059265B0051B2BE /* SimplyJobTrackerWidget */,
+			);
+			name = SimplyJobTrackerWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = SimplyJobTrackerWidgetExtension;
+			productReference = CC0041C93059265B0051B2BE /* SimplyJobTrackerWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		CCA8CC20301DDA3B00C83316 /* SimplyJobTracker */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CCA8CC44301DDA3C00C83316 /* Build configuration list for PBXNativeTarget "SimplyJobTracker" */;
@@ -121,10 +222,12 @@
 				CCA8CC1D301DDA3B00C83316 /* Sources */,
 				CCA8CC1E301DDA3B00C83316 /* Frameworks */,
 				CCA8CC1F301DDA3B00C83316 /* Resources */,
+				CC0041E03059265C0051B2BE /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CC0041DA3059265C0051B2BE /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				CCA8CC23301DDA3B00C83316 /* SimplyJobTracker */,
@@ -193,6 +296,9 @@
 				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
+					CC0041C83059265B0051B2BE = {
+						CreatedOnToolsVersion = 26.6;
+					};
 					CCA8CC20301DDA3B00C83316 = {
 						CreatedOnToolsVersion = 26.6;
 					};
@@ -226,11 +332,19 @@
 				CCA8CC20301DDA3B00C83316 /* SimplyJobTracker */,
 				CCA8CC2F301DDA3C00C83316 /* SimplyJobTrackerTests */,
 				CCA8CC39301DDA3C00C83316 /* SimplyJobTrackerUITests */,
+				CC0041C83059265B0051B2BE /* SimplyJobTrackerWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		CC0041C73059265B0051B2BE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CCA8CC1F301DDA3B00C83316 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -255,6 +369,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CC0041C53059265B0051B2BE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CCA8CC1D301DDA3B00C83316 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -279,6 +400,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CC0041DA3059265C0051B2BE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CC0041C83059265B0051B2BE /* SimplyJobTrackerWidgetExtension */;
+			targetProxy = CC0041D93059265C0051B2BE /* PBXContainerItemProxy */;
+		};
 		CCA8CC32301DDA3C00C83316 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CCA8CC20301DDA3B00C83316 /* SimplyJobTracker */;
@@ -292,6 +418,70 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		CC0041DD3059265C0051B2BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SimplyJobTrackerWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SWY2GKPU2G;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SimplyJobTrackerWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SimplyJobTrackerWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = arviejhay.SimplyJobTracker.SimplyJobTrackerWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CC0041DE3059265C0051B2BE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SimplyJobTrackerWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SWY2GKPU2G;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SimplyJobTrackerWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SimplyJobTrackerWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = arviejhay.SimplyJobTracker.SimplyJobTrackerWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		CCA8CC42301DDA3C00C83316 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = CCA8CC23301DDA3B00C83316 /* SimplyJobTracker */;
@@ -424,6 +614,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SimplyJobTracker/SimplyJobTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SWY2GKPU2G;
@@ -459,6 +650,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SimplyJobTracker/SimplyJobTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SWY2GKPU2G;
@@ -576,6 +768,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CC0041DC3059265C0051B2BE /* Build configuration list for PBXNativeTarget "SimplyJobTrackerWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC0041DD3059265C0051B2BE /* Debug */,
+				CC0041DE3059265C0051B2BE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CCA8CC1C301DDA3B00C83316 /* Build configuration list for PBXProject "SimplyJobTracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

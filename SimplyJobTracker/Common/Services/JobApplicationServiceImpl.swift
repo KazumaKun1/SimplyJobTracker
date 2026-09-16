@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import WidgetKit
 
 protocol JobApplicationService: Actor {
     func createJobApplication() throws
@@ -28,6 +29,8 @@ actor JobApplicationServiceImpl: JobApplicationService {
         modelContext.insert(jobApplication)
         
         try modelContext.save()
+        
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     func deleteJobApplication(id: PersistentIdentifier) throws {
@@ -37,11 +40,15 @@ actor JobApplicationServiceImpl: JobApplicationService {
 
         modelContext.delete(jobApplication)
         try modelContext.save()
+        
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     func deleteAllJobApplications() throws {
         try modelContext.delete(model: JobApplication.self)
         try modelContext.save()
+        
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     private func fetchAllForExport() throws -> [JobApplicationExportRow] {

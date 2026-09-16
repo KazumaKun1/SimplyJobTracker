@@ -15,4 +15,6 @@ enum Constants {
         }
         return key
     }()
+    
+    static let appGroupID: String = "group.arviejhay.SimplyJobTracker"
 }
