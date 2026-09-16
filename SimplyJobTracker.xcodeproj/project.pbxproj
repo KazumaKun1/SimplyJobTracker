@@ -77,8 +77,8 @@
 				"Common/Extensions/Color+Extensions.swift",
 				Common/Resources/SharedModelContainer.swift,
 				Common/Views/HeaderView.swift,
-				Features/Home/Main/Model/Interview.swift,
-				Features/Home/Main/Model/JobApplication.swift,
+				Features/Home/Model/Interview.swift,
+				Features/Home/Model/JobApplication.swift,
 			);
 			target = CC0041C83059265B0051B2BE /* SimplyJobTrackerWidgetExtension */;
 		};
