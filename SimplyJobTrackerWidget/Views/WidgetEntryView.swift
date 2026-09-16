@@ -29,6 +29,6 @@ struct SimplyJobTrackerWidgetEntryView : View {
                 }
             }
         }
-        .containerBackground(.appBackground, for: .widget)
+        .containerBackground(.widgetBackground, for: .widget)
     }
 }

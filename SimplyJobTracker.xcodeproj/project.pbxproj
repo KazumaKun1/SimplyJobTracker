@@ -72,7 +72,6 @@
 		CC0041E530593C260051B2BE /* Exceptions for "SimplyJobTracker" folder in "SimplyJobTrackerWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Assets.xcassets,
 				Common/Constants/Constants.swift,
 				Common/Enums/JobApplicationStatus.swift,
 				"Common/Extensions/Color+Extensions.swift",
@@ -432,6 +431,7 @@
 				INFOPLIST_FILE = SimplyJobTrackerWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SimplyJobTrackerWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -463,6 +463,7 @@
 				INFOPLIST_FILE = SimplyJobTrackerWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SimplyJobTrackerWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -15,8 +15,8 @@ struct SimplyJobTrackerWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             SimplyJobTrackerWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("Job Applications")
+        .description("See your applied, interviewing, offer, rejected, and ghosted counts at a glance.")
     }
 }
 
