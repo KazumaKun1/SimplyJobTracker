@@ -1,3 +1,5 @@
+<img width="150" height="150" alt="appicon" src="https://github.com/user-attachments/assets/f76c76c4-c19c-48b2-94c1-b411aacdb823" />
+
 # SimplyJobTracker
 
 A SwiftUI + SwiftData iOS app for tracking job applications — status, interviews, and activity over time — without spreadsheets.
