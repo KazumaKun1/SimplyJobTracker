@@ -20,7 +20,7 @@ xcodebuild test -project SimplyJobTracker.xcodeproj -scheme SimplyJobTracker -de
 open SimplyJobTracker.xcodeproj
 ```
 
-Deployment target is iOS 26.5, Swift 6 with strict concurrency and `-default-isolation=MainActor` — types are MainActor-isolated by default; only opt out (e.g. with `actor`/`nonisolated`) where background work is intentional (see the service layer below).
+Deployment target is iOS 18.6 (main app and widget extension targets — the project-level default of 26.5 only applies to the test targets), Swift 6 with strict concurrency and `-default-isolation=MainActor` — types are MainActor-isolated by default; only opt out (e.g. with `actor`/`nonisolated`) where background work is intentional (see the service layer below). The widget extension target builds with Swift 5 and has no default actor isolation setting.
 
 RevenueCat needs an API key: `Common/Resources/Config.xcconfig` defines `REVENUECAT_API_KEY`, wired through an `INFOPLIST_KEY_REVENUECAT_API_KEY` build setting into Info.plist. `Constants.revenueCatAPIKey` (`Common/Constants/Constants.swift`) reads it back out and `fatalError`s if it's missing — make sure `Config.xcconfig` is in place before building.
 
