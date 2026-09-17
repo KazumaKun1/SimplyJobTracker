@@ -50,7 +50,7 @@ extension EditJobApplicationViewModel {
     }
 }
 
-private extension EditJobApplicationViewModel {
+extension EditJobApplicationViewModel {
     func presentGeneralError() {
         let generalError = JobTrackerError.generalError
         coordinator?

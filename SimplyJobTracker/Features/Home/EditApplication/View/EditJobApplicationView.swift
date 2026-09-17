@@ -62,8 +62,12 @@ struct EditJobApplicationView: View {
                     }
                 }
                 .onChange(of: jobApplication.status) { _, _ in
-                    try? modelContext.save()
-                    WidgetCenter.shared.reloadAllTimelines()
+                    do {
+                        try modelContext.save()
+                        WidgetCenter.shared.reloadAllTimelines()
+                    } catch {
+                        viewModel.presentGeneralError()
+                    }
                 }
             }
         }
