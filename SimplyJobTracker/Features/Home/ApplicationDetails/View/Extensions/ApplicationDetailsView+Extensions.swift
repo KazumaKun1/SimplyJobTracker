@@ -129,39 +129,58 @@ extension ApplicationDetailsView {
                 VStack(spacing: 0) {
                     ForEach(Array(interviews.enumerated()), id: \.offset) { index, interview in
                         HStack(alignment: .top, spacing: 12) {
-                            VStack(spacing: 4) {
-                                Image(systemName: "circle.fill")
-                                    .font(.caption)
-                                    .foregroundStyle(.yellow)
-                                if index != interviews.count - 1 {
-                                    VLine()
-                                        .stroke(Color.gray.opacity(0.6), style: StrokeStyle(lineWidth: 1, dash: [4]))
-                                        .frame(width: 1)
-                                        .frame(maxHeight: .infinity)
-                                        .padding(.bottom, 2)
-                                }
-                            }
-
-                            VStack(alignment: .leading, spacing: 10) {
-                                VStack(alignment: .leading) {
-                                    Text(interview.title ?? "Untitled Interview")
-                                        .font(.subheadline)
-                                        .fontWeight(.semibold)
-                                    Text(interview.date, style: .date)
-                                        .font(.caption)
-                                }
-
-                                Text(interview.descriptionContent.nilIfEmpty ?? "Not Added yet")
-                                    .font(.footnote)
-                                    .foregroundStyle(.gray)
-                            }
-                            .padding(.bottom, index != interviews.count - 1 ? 12 : 0)
+                            FlowView(interviewsCount: interviews.count, index: index)
+                            InterviewInfo(interview: interview, interviewsCount: interviews.count, index: index)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
             .padding(.bottom, 6)
+        }
+    }
+    
+    struct FlowView: View {
+        let interviewsCount: Int
+        let index: Int
+        
+        var body: some View {
+            VStack(spacing: 4) {
+                Image(systemName: "circle.fill")
+                    .font(.caption)
+                    .foregroundStyle(.yellow)
+                if index != interviewsCount - 1 {
+                    VLine()
+                        .stroke(Color.gray.opacity(0.6), style: StrokeStyle(lineWidth: 1, dash: [4]))
+                        .frame(width: 1)
+                        .frame(maxHeight: .infinity)
+                        .padding(.bottom, 2)
+                }
+            }
+        }
+    }
+    
+    struct InterviewInfo: View {
+        let interview: Interview
+        let interviewsCount: Int
+        let index: Int
+        
+        var body: some View {
+            VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading) {
+                    Text(interview.title ?? "Untitled Interview")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    Text(interview.date, style: .date)
+                        .font(.caption)
+                }
+
+                Text(interview.descriptionContent.nilIfEmpty ?? "Not Added yet")
+                    .font(.footnote)
+                    .foregroundStyle(.gray)
+            }
+            .padding(.bottom, index != interviewsCount - 1 ? 12 : 0)
         }
     }
 }

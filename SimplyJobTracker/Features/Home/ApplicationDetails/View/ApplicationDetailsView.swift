@@ -11,24 +11,18 @@ struct ApplicationDetailsView: View {
     var jobApplication: JobApplication
     var viewModel: EditJobApplicationViewModel
     
-    @State private var isEditMode: Bool = false
-    
     var body: some View {
         ScreenContainer {
-            if isEditMode {
-                EditJobApplicationView(jobApplication: jobApplication, viewModel: viewModel)
-            } else {
-                JobDetailsView(application: jobApplication)
-            }
+            JobDetailsView(application: jobApplication)
         }
-        .navigationTitle(isEditMode ? "Edit Application" : "View Application")
+        .navigationTitle("View Application")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    isEditMode.toggle()
+                    viewModel.showEditJobApplication(for: jobApplication)
                 } label: {
-                    Text(isEditMode ? "View" : "Edit")
+                    Text("Edit")
                         .foregroundStyle(.blue)
                 }
             }
@@ -42,6 +36,5 @@ struct ApplicationDetailsView: View {
                 }
             }
         }
-        .animation(.easeInOut(duration: 0.25), value: isEditMode)
     }
 }

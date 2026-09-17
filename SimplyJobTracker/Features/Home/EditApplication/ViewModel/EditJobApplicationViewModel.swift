@@ -30,7 +30,6 @@ extension EditJobApplicationViewModel {
         } catch {
             presentGeneralError()
         }
-        
     }
 
     func deleteInterview(_ interview: Interview) {
@@ -51,7 +50,7 @@ extension EditJobApplicationViewModel {
     }
 }
 
-private extension EditJobApplicationViewModel {
+extension EditJobApplicationViewModel {
     func presentGeneralError() {
         let generalError = JobTrackerError.generalError
         coordinator?
@@ -62,5 +61,12 @@ private extension EditJobApplicationViewModel {
                     primaryButton: .init(title: "Ok!")
                 )
             )
+    }
+}
+
+// MARK: - Navigation
+extension EditJobApplicationViewModel {
+    func showEditJobApplication(for jobApplication: JobApplication) {
+        coordinator?.navigate(to: .editApplication(jobApplication))
     }
 }

@@ -26,41 +26,49 @@ struct EditJobApplicationView: View {
 
     var viewModel: EditJobApplicationViewModel
 
+    @Environment(\.modelContext) private var modelContext
     @State private var activeAlert: AlertType?
     
     var body: some View {
         ScrollViewReader { proxy in
-            VStack(spacing: 30) {
-                StatusSection(currentStatus: $jobApplication.status)
-                TextFieldSection(title: "Name of the Role · optional", placeholder: "e.g. Role ABC", text: $jobApplication.role)
-                TextFieldSection(title: "Name of the Company · optional", placeholder: "e.g. Company ABC", text: $jobApplication.company)
-                OverallExperienceSection(overallExperience: $jobApplication.overallExperience)
-                RatingSection(rating: $jobApplication.rating)
-                TextFieldSection(title: "How it felt · optional", placeholder: "How did it feel, in a few words?", text: $jobApplication.feeling)
-                CalendarSection(date: $jobApplication.date.toOptional(fallback: .now))
-                InterviewSection(interviews: jobApplication.interviews) {
-                    viewModel.addInterview(to: jobApplication)
-                } deleteInterviewAction: { interview in
-                    activeAlert = .deleteInterview(interview)
+            ScreenContainer {
+                VStack(spacing: 30) {
+                    StatusSection(currentStatus: $jobApplication.status)
+                    TextFieldSection(title: "Name of the Role · optional", placeholder: "e.g. Role ABC", text: $jobApplication.role)
+                    TextFieldSection(title: "Name of the Company · optional", placeholder: "e.g. Company ABC", text: $jobApplication.company)
+                    OverallExperienceSection(overallExperience: $jobApplication.overallExperience)
+                    RatingSection(rating: $jobApplication.rating)
+                    TextFieldSection(title: "How it felt · optional", placeholder: "How did it feel, in a few words?", text: $jobApplication.feeling)
+                    CalendarSection(date: $jobApplication.date.toOptional(fallback: .now))
+                    InterviewSection(interviews: jobApplication.interviews) {
+                        viewModel.addInterview(to: jobApplication)
+                    } deleteInterviewAction: { interview in
+                        activeAlert = .deleteInterview(interview)
+                    }
+                    
+                    Button(role: .destructive) {
+                        activeAlert = .deleteJobApplication
+                    } label: {
+                        Label("Delete Job Application", systemImage: "trash.fill")
+                    }
+                    .padding()
+                    .id("DeleteJobApplication")
                 }
-                
-                Button(role: .destructive) {
-                    activeAlert = .deleteJobApplication
-                } label: {
-                    Label("Delete Job Application", systemImage: "trash.fill")
+                .padding(.horizontal)
+                .padding(.bottom)
+                .onChange(of: jobApplication.interviews) { _, _ in
+                    withAnimation {
+                        proxy.scrollTo("DeleteJobApplication", anchor: .bottom)
+                    }
                 }
-                .padding()
-                .id("DeleteJobApplication")
-            }
-            .padding(.horizontal)
-            .padding(.bottom)
-            .onChange(of: jobApplication.interviews) { _, _ in
-                withAnimation {
-                    proxy.scrollTo("DeleteJobApplication", anchor: .bottom)
+                .onChange(of: jobApplication.status) { _, _ in
+                    do {
+                        try modelContext.save()
+                        WidgetCenter.shared.reloadAllTimelines()
+                    } catch {
+                        viewModel.presentGeneralError()
+                    }
                 }
-            }
-            .onChange(of: jobApplication.status) { _, _ in
-                WidgetCenter.shared.reloadAllTimelines()
             }
         }
         .alert(
@@ -96,6 +104,7 @@ struct EditJobApplicationView: View {
                 Text("Are you sure you want to delete this interview?")
             }
         }
+        .navigationTitle("Edit Application")
     }
 }
 
