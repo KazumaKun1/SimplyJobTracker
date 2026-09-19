@@ -11,7 +11,7 @@ struct TotalWithPositiveStatusView: View {
     let entry: JobApplicationEntry
     
     var body: some View {
-        HStack(spacing: 20) {
+        HStack(spacing: 30) {
             TotalOnlyView(numberOfApplications: entry.total)
             Divider()
             VStack(spacing: 4) {

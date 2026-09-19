@@ -49,7 +49,7 @@ extension ApplicationDetailsView {
         let date: Date
         
         var body: some View {
-            Group {
+            VStack(alignment: .leading) {
                 JobApplicationStatusView(title: title, color: textColor)
                 Text(role ?? "Untitled Role")
                     .font(.largeTitle)
@@ -63,7 +63,9 @@ extension ApplicationDetailsView {
                 }
                 .font(.caption)
                 .foregroundStyle(.gray.opacity(0.8))
+                .accessibilityElement(children: .combine)
             }
+            .accessibilityElement(children: .combine)
         }
     }
 }
@@ -76,6 +78,7 @@ extension ApplicationDetailsView {
         
         var body: some View {
             HStack {
+                let accessibilityText: LocalizedStringKey = "^[\(interviewCount) interview](inflect: true)"
                 VStack(alignment: .leading) {
                     Text("\(interviewCount)")
                         .font(.title)
@@ -90,6 +93,8 @@ extension ApplicationDetailsView {
                         .fill(.cardBackground)
                         .shadow(color: .black.opacity(0.1), radius: 6)
                 )
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(accessibilityText)
                 
                 VStack(alignment: .leading) {
                     Group {
@@ -111,6 +116,8 @@ extension ApplicationDetailsView {
                         .fill(.cardBackground)
                         .shadow(color: .black.opacity(0.1), radius: 6)
                 )
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(rating != nil ? "\(rating ?? 0) out of 5 Rating" : "No Rating")
             }
             .padding(.bottom)
         }
@@ -134,6 +141,7 @@ extension ApplicationDetailsView {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityElement(children: .combine)
                     }
                 }
             }

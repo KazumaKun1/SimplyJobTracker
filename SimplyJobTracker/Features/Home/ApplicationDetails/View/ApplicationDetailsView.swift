@@ -34,6 +34,10 @@ struct ApplicationDetailsView: View {
                         .foregroundStyle(jobApplication.isFavorite ? Color.yellow : .primary)
                         .font(.caption)
                 }
+                .accessibilityLabel("Favorite")
+                .accessibilityValue(jobApplication.isFavorite ? "On" : "Off")
+                .accessibilityAddTraits(.isToggle)
+                .accessibilityRemoveTraits(.isButton)
             }
         }
     }

@@ -119,6 +119,7 @@ struct HomeView: View {
                 }
             }
             .padding(.horizontal)
+            .padding(.bottom, 140)
         } overlay: {
             VStack {
                 FloatingButton(image: "line.3.horizontal.decrease", font: .title) {

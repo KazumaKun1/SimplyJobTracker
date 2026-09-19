@@ -23,6 +23,7 @@ extension FilterView {
             HStack {
                 Image(systemName: isOn.wrappedValue ? "star.fill" : "star")
                     .foregroundStyle(isOn.wrappedValue ? Color.yellow : .primary)
+                    .accessibilityHidden(true)
                 Spacer()
                 Toggle("Favorites only", isOn: isOn)
                     .tint(.yellow)
@@ -170,6 +171,7 @@ extension FilterView {
             } label: {
                 SelectionView(title: selection.title, isSelected: currentSelection == selection)
             }
+            .accessibilityAddTraits(currentSelection == selection ? [.isSelected] : [])
         }
     }
     
@@ -236,6 +238,7 @@ extension FilterView {
                 Text("Filters")
                     .font(.title3)
                     .fontWeight(.semibold)
+                    .accessibilityAddTraits(.isHeader)
                 Spacer()
                 Button {
                     dismiss()

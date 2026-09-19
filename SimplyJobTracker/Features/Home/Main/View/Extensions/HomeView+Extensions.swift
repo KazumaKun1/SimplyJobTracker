@@ -28,6 +28,7 @@ extension HomeView {
                     .font(.caption)
                     .foregroundStyle(.blue)
                     .fontWeight(.semibold)
+                    .accessibilityLabel("Last 7 days of job application activity, \(activities.first?.date.formatted(.dateTime.month().day()) ?? "") to \(activities.last?.date.formatted(.dateTime.month().day()) ?? "")")
                 DailyActivityView(activities: activities, singleDate: filter.dateContainer.singleDate)
             }
             .padding()
@@ -48,16 +49,25 @@ extension HomeView {
             HStack(spacing: 16) {
                 ForEach(activities) { activity in
                     let isSelected = singleDate.map { Calendar.current.isDate(activity.date, inSameDayAs: $0) } ?? false
+                    let accessibilityValue = activity.statuses.isEmpty
+                        ? "No applications"
+                        : "\(activity.statuses.map(\.title).joined(separator: ", "))\(activity.excessCount > 0 ? " plus \(activity.excessCount) more" : "")"
+                    
                     DailyActivityColumn(activity: activity)
-                    .padding(.vertical, 8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.blue.opacity(0.2))
-                            .opacity(isSelected ? 0.4 : 0)
-                    )
-                    .onTapGesture {
-                        singleDate = isSelected ? nil : activity.date
-                    }
+                        .padding(.vertical, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(.blue.opacity(0.2))
+                                .opacity(isSelected ? 0.4 : 0)
+                        )
+                        .onTapGesture {
+                            singleDate = isSelected ? nil : activity.date
+                        }
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(activity.date.formatted(.dateTime.month().day().weekday(.wide)))
+                        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+                        .accessibilityValue(accessibilityValue)
+                        .accessibilityHint(isSelected ? "Removes this date filter" : "Filters the list by this date")
                 }
             }
         }
@@ -112,7 +122,7 @@ extension HomeView {
                 }
                 if activity.excessCount > 0 {
                     Text("+\(activity.excessCount)")
-                        .font(.system(size: 10))
+                        .font(.system(size: 10, design: .default))
                         .foregroundStyle(.secondary)
                 }
             }
@@ -143,7 +153,13 @@ extension HomeView {
 
         var body: some View {
             if let status {
-                FilterTagCapsule(text: "\(status.title) \(numberOfItems)", tint: status.color) {
+                FilterTagCapsule(
+                    text: "\(status.title) \(numberOfItems)",
+                    tint: status.color,
+                    accessibilityLabel: "\(status.title) Filter Active",
+                    accessibilityValue: "\(numberOfItems) Applications",
+                    closeAccessibilityLabel: "Remove this status filter"
+                ) {
                     self.status = nil
                 }
             }
@@ -167,7 +183,13 @@ extension HomeView {
 
         var body: some View {
             if let date {
-                FilterTagCapsule(text: date.formatted(.dateTime.month(.abbreviated).day())) {
+                let dateText = date.formatted(.dateTime.month(.abbreviated).day())
+                FilterTagCapsule(
+                    text: dateText,
+                    accessibilityLabel: "Single Date Filter Active",
+                    accessibilityValue: dateText,
+                    closeAccessibilityLabel: "Remove this single date filter"
+                ) {
                     self.date = nil
                 }
             }
@@ -179,8 +201,13 @@ extension HomeView {
 
         var body: some View {
             if let range {
+                let startDateText = range.lowerBound.formatted(.dateTime.month(.abbreviated).day())
+                let endDateText = range.upperBound.formatted(.dateTime.month(.abbreviated).day())
                 FilterTagCapsule(
-                    text: "\(range.lowerBound.formatted(.dateTime.month(.abbreviated).day())) – \(range.upperBound.formatted(.dateTime.month(.abbreviated).day()))"
+                    text: "\(startDateText) – \(endDateText)",
+                    accessibilityLabel: "Date Range Filter Active",
+                    accessibilityValue: "from \(startDateText) to \(endDateText)",
+                    closeAccessibilityLabel: "Remove this date range filter"
                 ) {
                     self.range = nil
                 }
@@ -194,7 +221,9 @@ extension HomeView {
         var body: some View {
             if isFavorite != nil {
                 FilterTagCapsule(
-                    text: "★ Favorites"
+                    text: "★ Favorites",
+                    accessibilityLabel: "Favorites Filter Active",
+                    closeAccessibilityLabel: "Remove this favorite filter"
                 ) {
                     self.isFavorite = nil
                 }
@@ -205,6 +234,9 @@ extension HomeView {
     struct FilterTagCapsule: View {
         let text: String
         var tint: Color = .secondary
+        let accessibilityLabel: String
+        var accessibilityValue: String? = nil
+        let closeAccessibilityLabel: String
         let onClose: () -> Void
 
         var body: some View {
@@ -214,11 +246,14 @@ extension HomeView {
                     .fontWeight(.semibold)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
+                    .accessibilityLabel(accessibilityLabel)
+                    .accessibilityValue(accessibilityValue ?? "")
                 Button(action: onClose) {
                     Image(systemName: "xmark")
                         .font(.caption2)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(closeAccessibilityLabel)
             }
             .foregroundStyle(tint)
             .padding(.horizontal, 10)
@@ -292,15 +327,22 @@ extension HomeView {
                 ForEach(pages) { page in
                     HStack {
                         ForEach(page.tiles) { tile in
+                            let isSelected = activeFilter == tile.status
                             TileView(number: tile.number, text: tile.status.title, color: tile.status.color)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 15)
                                         .stroke(tile.status.color, lineWidth: 2)
-                                        .opacity(activeFilter == tile.status ? 0.6 : 0)
+                                        .opacity(isSelected ? 0.6 : 0)
                                 )
                                 .onTapGesture {
-                                    activeFilter = activeFilter == tile.status ? nil : tile.status
+                                    activeFilter = isSelected ? nil : tile.status
+                                    AccessibilityNotification.LayoutChanged().post()
                                 }
+                                .accessibilityElement(children: .ignore)
+                                .accessibilityLabel(tile.status.title)
+                                .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+                                .accessibilityValue("\(tile.number) Applications")
+                                .accessibilityHint(isSelected ? "Remove this \(tile.status.title) filter" : "Filters the list by \(tile.status.title) status")
                                 .animation(.default, value: activeFilter)
                         }
                     }
@@ -312,6 +354,9 @@ extension HomeView {
             .tabViewStyle(.page)
             .indexViewStyle(.page(backgroundDisplayMode: .always))
             .frame(height: 135)
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Job Metrics Overview")
+            .accessibilityValue("Step \(currentPage + 1) of 2")
         }
     }
     
