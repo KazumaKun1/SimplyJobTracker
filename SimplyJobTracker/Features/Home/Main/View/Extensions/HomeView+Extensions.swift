@@ -49,7 +49,9 @@ extension HomeView {
             HStack(spacing: 16) {
                 ForEach(activities) { activity in
                     let isSelected = singleDate.map { Calendar.current.isDate(activity.date, inSameDayAs: $0) } ?? false
-                    let accessibilityValue = "\(activity.statuses.map(\.title).joined())\(activity.excessCount > 0 ? " plus \(activity.excessCount) more" : "")"
+                    let accessibilityValue = activity.statuses.isEmpty
+                        ? "No applications"
+                        : "\(activity.statuses.map(\.title).joined(separator: ", "))\(activity.excessCount > 0 ? " plus \(activity.excessCount) more" : "")"
                     
                     DailyActivityColumn(activity: activity)
                         .padding(.vertical, 8)
@@ -184,7 +186,7 @@ extension HomeView {
                 let dateText = date.formatted(.dateTime.month(.abbreviated).day())
                 FilterTagCapsule(
                     text: dateText,
-                    accessibilityLabel: "Date Range Filter Active",
+                    accessibilityLabel: "Single Date Filter Active",
                     accessibilityValue: dateText,
                     closeAccessibilityLabel: "Remove this single date filter"
                 ) {
@@ -354,7 +356,7 @@ extension HomeView {
             .frame(height: 135)
             .accessibilityElement(children: .contain)
             .accessibilityLabel("Job Metrics Overview")
-            .accessibilityValue("Step \(currentPage) of 2")
+            .accessibilityValue("Step \(currentPage + 1) of 2")
         }
     }
     

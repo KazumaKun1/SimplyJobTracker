@@ -27,16 +27,17 @@ struct ApplicationDetailsView: View {
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Image(systemName: jobApplication.isFavorite ? "star.fill" : "star")
-                    .foregroundStyle(jobApplication.isFavorite ? Color.yellow : .primary)
-                    .font(.caption)
-                    .onTapGesture {
-                        jobApplication.isFavorite.toggle()
-                    }
-                    .accessibilityLabel("Favorite")
-                    .accessibilityValue(jobApplication.isFavorite ? "On" : "Off")
-                    .accessibilityAddTraits(.isToggle)
-                    .accessibilityRemoveTraits(.isButton)
+                Button {
+                    jobApplication.isFavorite.toggle()
+                } label: {
+                    Image(systemName: jobApplication.isFavorite ? "star.fill" : "star")
+                        .foregroundStyle(jobApplication.isFavorite ? Color.yellow : .primary)
+                        .font(.caption)
+                }
+                .accessibilityLabel("Favorite")
+                .accessibilityValue(jobApplication.isFavorite ? "On" : "Off")
+                .accessibilityAddTraits(.isToggle)
+                .accessibilityRemoveTraits(.isButton)
             }
         }
     }
