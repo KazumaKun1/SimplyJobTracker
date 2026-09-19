@@ -189,7 +189,7 @@ extension SettingsView {
                 } label: {
                     Text("Clear all data")
                 }
-                .disabled(isDeleteDisabled)
+                .disabled(isDeleteDisabled || exportState == .generating)
             }
             .padding()
             .background(
