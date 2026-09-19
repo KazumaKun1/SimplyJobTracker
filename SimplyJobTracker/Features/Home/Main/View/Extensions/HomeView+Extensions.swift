@@ -62,6 +62,7 @@ extension HomeView {
                         )
                         .onTapGesture {
                             singleDate = isSelected ? nil : activity.date
+                            AccessibilityNotification.LayoutChanged().post()
                         }
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(activity.date.formatted(.dateTime.month().day().weekday(.wide)))
@@ -161,6 +162,7 @@ extension HomeView {
                     closeAccessibilityLabel: "Remove this status filter"
                 ) {
                     self.status = nil
+                    AccessibilityNotification.LayoutChanged().post()
                 }
             }
         }
@@ -191,6 +193,7 @@ extension HomeView {
                     closeAccessibilityLabel: "Remove this single date filter"
                 ) {
                     self.date = nil
+                    AccessibilityNotification.LayoutChanged().post()
                 }
             }
         }
@@ -210,6 +213,7 @@ extension HomeView {
                     closeAccessibilityLabel: "Remove this date range filter"
                 ) {
                     self.range = nil
+                    AccessibilityNotification.LayoutChanged().post()
                 }
             }
         }
@@ -226,6 +230,7 @@ extension HomeView {
                     closeAccessibilityLabel: "Remove this favorite filter"
                 ) {
                     self.isFavorite = nil
+                    AccessibilityNotification.LayoutChanged().post()
                 }
             }
         }

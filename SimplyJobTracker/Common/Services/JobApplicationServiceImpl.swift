@@ -18,7 +18,6 @@ protocol JobApplicationService: Actor {
 
 enum JobApplicationServiceError: Error {
     case notFound
-    case deletionFailed
     case emptyRecords
 }
 

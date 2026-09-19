@@ -146,7 +146,8 @@ extension SettingsView {
 // MARK: - Data Section
 extension SettingsView {
     struct DataSection: View {
-        let isDisabled: Bool
+        let isExportDisabled: Bool
+        let isDeleteDisabled: Bool
         let exportState: ExportState
         let exportCSVAction: () -> ()
         let deleteDataAction: () -> ()
@@ -162,6 +163,7 @@ extension SettingsView {
                         } label: {
                             Label("Export as CSV", systemImage: "square.and.arrow.up")
                         }
+                        .disabled(isExportDisabled)
                         .transition(.opacity)
                     case .generating:
                         HStack {
@@ -187,7 +189,7 @@ extension SettingsView {
                 } label: {
                     Text("Clear all data")
                 }
-                .disabled(isDisabled)
+                .disabled(isDeleteDisabled || exportState == .generating)
             }
             .padding()
             .background(

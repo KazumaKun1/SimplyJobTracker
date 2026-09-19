@@ -6,13 +6,17 @@ A SwiftUI + SwiftData iOS app for tracking job applications — status, intervie
 
 ## Features
 
-- **Overview dashboard** — swipeable status tiles (Applied, Interviewing, Offer, Rejected, Passed) with live counts, tap a tile to filter
+- **Overview dashboard** — swipeable status tiles (Applied, Interviewing, Offer, Rejected, Ghosted) with live counts, tap a tile to filter
 - **Last 7 days activity** — a compact per-day status strip, tap a day to filter the list to that date
-- **Application list** — cards showing role, company, status, interview count, and a relative timestamp ("2h ago") that keeps itself up to date
-- **Filtering** — by status and by single date/date range, shown as removable filter tags
-- **Add / edit applications** — track role, company, status, rating, overall experience notes, feeling, and associated interviews
+- **Application list** — cards showing role, company, status, favorite star, interview count, and a relative timestamp that keeps itself up to date
+- **Favorites** — star an application to flag it, then filter down to favorites only
+- **Filtering & search** — by favorite, status, and single date/date range, shown as removable filter tags; a separate search sheet does live substring search over role/company
+- **Add / edit applications** — track role, company, status, 1–5 star rating, overall experience notes, feeling, date applied, and associated interviews (each with its own title, date, and description)
+- **CSV export** — export all applications to CSV (with formula-injection–safe escaping) and share via the system share sheet
 - **Home-screen widget** — a small WidgetKit widget showing application counts by status
 - **Tip jar** — optional in-app tips via RevenueCat, in Settings
+- **Accessibility** — VoiceOver labels/values/hints and grouped elements throughout the Home screen and filters
+- **Data stays on-device** — no account required; a "back up to Google Drive" option is planned but not yet implemented
 
 ## Requirements
 
@@ -35,12 +39,12 @@ To build or test from the command line, see [CLAUDE.md](CLAUDE.md) for the exact
 - **SwiftUI** for the UI, **SwiftData** for persistence
 - **WidgetKit** for the home-screen widget, sharing data with the app via an App Group
 - **RevenueCat** (SPM) for the Settings tip jar
-- **Swift Testing** for unit tests, **XCTest** for UI tests
+- **Swift Testing** for unit tests, **XCTest** for UI tests (both currently template stubs — see Status below)
 - A lightweight coordinator pattern for navigation/alerts and `@Observable` view models — see [CLAUDE.md](CLAUDE.md) for the architecture details
 
 ## Status
 
-Actively developed.
+Actively developed. Test targets are currently unfilled Xcode templates (no real unit or UI test coverage yet), though CI runs `xcodebuild test` on every PR.
 
 ## Screenshots (App)
 <img width="250" height="544" alt="simulator_screenshot_D5DA421D-1325-45F4-9694-AE8AE0B9F2A0" src="https://github.com/user-attachments/assets/67673a2f-8f71-41f8-8b40-c24900c3b756" />
