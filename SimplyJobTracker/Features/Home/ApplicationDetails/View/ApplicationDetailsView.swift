@@ -31,7 +31,7 @@ struct ApplicationDetailsView: View {
                     jobApplication.isFavorite.toggle()
                 } label: {
                     Image(systemName: jobApplication.isFavorite ? "star.fill" : "star")
-                        .foregroundStyle(jobApplication.isFavorite ? Color.yellow : .primary)
+                        .foregroundStyle(jobApplication.isFavorite ? .yellow : .primary)
                         .font(.caption)
                 }
                 .accessibilityLabel("Favorite")

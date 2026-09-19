@@ -25,7 +25,11 @@ struct SettingsView: View {
                         await viewModel.purchase(package)
                     }
                 }
-                DataSection(isDisabled: applications.isEmpty, exportState: viewModel.exportState) {
+                DataSection(
+                    isExportDisabled: applications.isEmpty || viewModel.isErasing,
+                    isDeleteDisabled: applications.isEmpty || viewModel.isErasing,
+                    exportState: viewModel.exportState
+                ) {
                     Task {
                         await viewModel.generateCSVFile()
                     }
@@ -46,7 +50,7 @@ struct SettingsView: View {
             await viewModel.loadPackages()
         }
         .onAppear {
-            viewModel.exportState = .idle
+            viewModel.resetExportStateIfNeeded()
         }
         .alert("Confirmation", isPresented: $showEraseDataConfirmation) {
             Button("Cancel", role: .cancel) {}

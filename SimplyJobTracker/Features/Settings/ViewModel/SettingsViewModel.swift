@@ -27,6 +27,7 @@ class SettingsViewModel {
     var packages: [Package] = []
     
     var exportState: ExportState = .idle
+    private(set) var isErasing: Bool = false
     
     init(jobApplicationService: JobApplicationService, tipService: TipJarService, coordinator: SettingsCoordinator) {
         self.jobApplicationService = jobApplicationService
@@ -77,7 +78,18 @@ extension SettingsViewModel {
 
 // MARK: - Export CSV
 extension SettingsViewModel {
+    func resetExportStateIfNeeded() {
+        guard exportState != .generating else { return }
+
+        if case .ready(let item) = exportState {
+            try? FileManager.default.removeItem(at: item.fileURL)
+        }
+        exportState = .idle
+    }
+
     func generateCSVFile() async {
+         guard !isErasing, exportState == .idle else { return }
+
          withAnimation(.easeInOut(duration: 0.25)) {
              exportState = .generating
          }
@@ -93,6 +105,14 @@ extension SettingsViewModel {
              withAnimation(.easeInOut(duration: 0.25)) {
                  exportState = .idle
              }
+             coordinator?
+                 .presentAlert(
+                     .init(
+                         title: "Nothing to Export",
+                         message: "Add a job application before exporting your data.",
+                         primaryButton: .init(title: "Ok!")
+                     )
+                 )
          } catch {
              withAnimation(.easeInOut(duration: 0.25)) {
                  exportState = .idle
@@ -112,6 +132,11 @@ extension SettingsViewModel {
 // MARK: - Erase Data
 extension SettingsViewModel {
     func eraseData() async {
+        guard exportState != .generating else { return }
+
+        isErasing = true
+        defer { isErasing = false }
+
         do {
             try await jobApplicationService.deleteAllJobApplications()
 
