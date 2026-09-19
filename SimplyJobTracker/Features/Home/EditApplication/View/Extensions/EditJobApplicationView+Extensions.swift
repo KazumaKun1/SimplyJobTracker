@@ -311,6 +311,7 @@ extension EditJobApplicationView {
                 TextField(placeholder, text: $text.unwrapped(), axis: .vertical)
                     .lineLimit(lineLimit)
                     .focused($isFocused)
+                   
                 Rectangle()
                     .frame(height: 1)
                     .foregroundStyle(.gray.opacity(isFocused ? 0.6 : 0.2))

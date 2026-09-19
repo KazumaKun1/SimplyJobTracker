@@ -13,7 +13,11 @@ extension SettingsView {
     struct BackupView: View {
         var body: some View {
             HeaderView(text: "BACKUP")
-            VStack {
+            VStack(spacing: 0) {
+                Image(.googledrive)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 35, height: 35)
                 Text("Back up to Google Drive feature is coming soon")
                     .foregroundStyle(.gray)
                     .padding()
@@ -25,6 +29,7 @@ extension SettingsView {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(.cardBackground)
             )
+            .accessibilityElement(children: .combine)
         }
     }
 }
@@ -51,6 +56,7 @@ extension SettingsView {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(.cardBackground)
             )
+            .accessibilityElement(children: .combine)
         }
     }
 }
@@ -64,19 +70,22 @@ extension SettingsView {
         
         var body: some View {
             VStack(spacing: 12) {
-                Image(systemName: shouldShowThankYou ? "heart.fill" : "heart")
-                    .font(.largeTitle)
-                    .foregroundStyle(shouldShowThankYou ? .red : .primary)
-                    .contentTransition(.symbolEffect(.replace))
-                
-                Text("Support this app")
-                    .font(.headline)
-                
-                Text(shouldShowThankYou ? "Thank you—that genuinely helps." : "SimplyJobTracker is built and maintained independently. If it's helped you, a small tip goes a long way.")
-                    .font(.subheadline)
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(.gray)
-                    .contentTransition(.opacity)
+                VStack(spacing: 12) {
+                    Image(systemName: shouldShowThankYou ? "heart.fill" : "heart")
+                        .font(.largeTitle)
+                        .foregroundStyle(shouldShowThankYou ? .red : .primary)
+                        .contentTransition(.symbolEffect(.replace))
+                    
+                    Text("Support this app")
+                        .font(.headline)
+                    
+                    Text(shouldShowThankYou ? "Thank you—that genuinely helps." : "SimplyJobTracker is built and maintained independently. If it's helped you, a small tip goes a long way.")
+                        .font(.subheadline)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.gray)
+                        .contentTransition(.opacity)
+                }
+                .accessibilityElement(children: .combine)
                 
                 Group {
                     if !packages.isEmpty {

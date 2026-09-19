@@ -34,6 +34,7 @@ struct HeaderView<Leading: View, Trailing: View>: View {
                 .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundStyle(textColor)
+                .accessibilityAddTraits(.isHeader)
             leadingContent()
             Spacer()
             trailingContent()

@@ -14,6 +14,10 @@ struct JobApplicationList: View {
     var body: some View {
         LazyVStack(alignment: .leading, spacing: 10) {
             ForEach(jobApplications) { application in
+                let applicationDate = application.date.formatted(.dateTime.month(.wide).day().year())
+                let valueKey: LocalizedStringKey = application.interviews.count > 0
+                    ? "^[\(application.interviews.count) interview](inflect: true), Application Date is \(applicationDate)"
+                    : "Application Date is \(applicationDate)"
                 Button {
                     actionTapped(application)
                 } label: {
@@ -21,6 +25,7 @@ struct JobApplicationList: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("\(application.role ?? "Untitled Role") at \(application.company ?? "Untitled Company"), \(application.status.title)\(application.isFavorite ? ", Favorite" : "")")
+                .accessibilityValue(valueKey)
             }
         }
         .padding(.bottom)
@@ -43,7 +48,7 @@ struct JobApplicationCard: View {
                         .font(.subheadline)
                     if !application.interviews.isEmpty {
                         Text(" • ")
-                        Text(application.interviews.fullDescription)
+                        Text("^[\(application.interviews.count) interview](inflect: true)")
                     }
                 }
             }

@@ -20,11 +20,11 @@ enum JobApplicationStatus: String, CaseIterable, Codable {
     
     var color: Color {
         switch self {
-        case .applied: .blue
-        case .interviewing: .yellow
-        case .offer: .green
-        case .rejected: .gray
-        case .ghosted: .pink.mix(with: .white, by: 0.3)
+        case .applied: .applied
+        case .interviewing: .interviewing
+        case .offer: .offers
+        case .rejected: .rejected
+        case .ghosted: .ghosted
         }
     }
 }
