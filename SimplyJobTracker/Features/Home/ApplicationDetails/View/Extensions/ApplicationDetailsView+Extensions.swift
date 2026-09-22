@@ -51,9 +51,9 @@ extension ApplicationDetailsView {
         var body: some View {
             VStack(alignment: .leading) {
                 JobApplicationStatusView(title: title, color: textColor)
-                Text(role ?? "Untitled Role")
+                Text(role.nilIfEmpty ?? "Untitled Role")
                     .font(.largeTitle)
-                Text(company ?? "Untitled Company")
+                Text(company.nilIfEmpty ?? "Untitled Company")
                     .font(.title3)
                     .padding(.bottom, 8)
                     .foregroundStyle(.secondary)
@@ -191,15 +191,15 @@ extension ApplicationDetailsView {
             .padding(.bottom, index != interviewsCount - 1 ? 12 : 0)
         }
     }
-}
-
-// MARK: - Vertical Line Shape
-struct VLine: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-        return path
+    
+    // MARK: - Vertical Line Shape
+    struct VLine: Shape {
+        nonisolated func path(in rect: CGRect) -> Path {
+            var path = Path()
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+            return path
+        }
     }
 }
 

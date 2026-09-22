@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppIntents
 
 enum JobApplicationStatus: String, CaseIterable, Codable {
     case applied
@@ -14,7 +15,7 @@ enum JobApplicationStatus: String, CaseIterable, Codable {
     case rejected
     case ghosted
     
-    var title: String {
+    nonisolated var title: String {
         self.rawValue.capitalized
     }
     
@@ -27,4 +28,16 @@ enum JobApplicationStatus: String, CaseIterable, Codable {
         case .ghosted: .ghosted
         }
     }
+}
+
+extension JobApplicationStatus: AppEnum {
+    nonisolated static let typeDisplayRepresentation: TypeDisplayRepresentation = "Application Status"
+    
+    nonisolated static let caseDisplayRepresentations: [JobApplicationStatus: DisplayRepresentation] = [
+        .applied: "Applied",
+        .interviewing: "Interviewing",
+        .offer: "Offer",
+        .rejected: "Rejected",
+        .ghosted: "Ghosted"
+    ]
 }

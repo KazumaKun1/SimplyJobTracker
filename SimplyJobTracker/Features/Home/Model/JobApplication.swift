@@ -10,6 +10,7 @@ import SwiftData
 
 @Model
 class JobApplication {
+    @Attribute(.unique) var id: UUID = UUID()
     var status: JobApplicationStatus
     var role: String?
     var company: String?
@@ -23,6 +24,7 @@ class JobApplication {
     var interviews: [Interview] = []
     
     init(status: JobApplicationStatus = .applied, isFavorite: Bool = false) {
+        self.id = UUID()
         self.status = status
         self.date = .now
         self.isFavorite = isFavorite
