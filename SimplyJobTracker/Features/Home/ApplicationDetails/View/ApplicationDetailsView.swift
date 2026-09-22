@@ -10,7 +10,8 @@ import SwiftUI
 struct ApplicationDetailsView: View {
     var jobApplication: JobApplication
     var viewModel: EditJobApplicationViewModel
-    
+    var coordinator: HomeCoordinator
+
     var body: some View {
         ScreenContainer {
             JobDetailsView(application: jobApplication)
@@ -24,6 +25,16 @@ struct ApplicationDetailsView: View {
                 } label: {
                     Text("Edit")
                         .foregroundStyle(.blue)
+                }
+            }
+            if coordinator.isHealthCheckAvailable {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        coordinator.presentSheet(.applicationHealthCheck(jobApplication))
+                    } label: {
+                        Image(systemName: "sparkles")
+                    }
+                    .accessibilityLabel("AI Health Check")
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
