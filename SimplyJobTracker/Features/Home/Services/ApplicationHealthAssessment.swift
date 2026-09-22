@@ -9,7 +9,7 @@ import FoundationModels
 
 @available(iOS 26.0, *)
 @Generable
-struct ApplicationHealthAssessment {
+struct ApplicationHealthAssessment: Equatable {
     @Guide(description: "Overall health category for this application")
     var status: ApplicationHealthStatus
     @Guide(description: "One sentence, at most 20 words, summarizing the application's current state")

@@ -49,6 +49,7 @@ struct ApplicationDetailsView: View {
                 .accessibilityValue(jobApplication.isFavorite ? "On" : "Off")
                 .accessibilityAddTraits(.isToggle)
                 .accessibilityRemoveTraits(.isButton)
+                .sensoryFeedback(.selection, trigger: jobApplication.isFavorite)
             }
         }
     }

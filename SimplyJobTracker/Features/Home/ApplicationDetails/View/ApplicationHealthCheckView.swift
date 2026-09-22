@@ -42,5 +42,12 @@ struct ApplicationHealthCheckView: View {
                 await viewModel.runAssessment()
             }
         }
+        .sensoryFeedback(trigger: viewModel.state) { _, newValue in
+            switch newValue {
+            case .loaded: .success
+            case .failed: .error
+            case .loading, .idle: nil
+            }
+        }
     }
 }

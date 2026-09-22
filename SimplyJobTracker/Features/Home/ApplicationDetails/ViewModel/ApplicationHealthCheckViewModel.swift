@@ -10,7 +10,7 @@ import Foundation
 @available(iOS 26.0, *)
 @Observable
 class ApplicationHealthCheckViewModel {
-    enum State {
+    enum State: Equatable {
         case idle
         case loading
         case loaded(ApplicationHealthAssessment)
