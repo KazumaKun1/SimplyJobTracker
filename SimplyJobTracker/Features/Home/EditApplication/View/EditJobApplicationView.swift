@@ -10,7 +10,7 @@ import SwiftData
 import WidgetKit
 
 struct EditJobApplicationView: View {
-    enum AlertType: Identifiable {
+    enum AlertType: Identifiable, Equatable {
         case deleteJobApplication
         case deleteInterview(Interview)
         
@@ -105,6 +105,9 @@ struct EditJobApplicationView: View {
             }
         }
         .navigationTitle("Edit Application")
+        .sensoryFeedback(trigger: activeAlert) { _, newValue in
+            newValue != nil ? .warning : nil
+        }
     }
 }
 

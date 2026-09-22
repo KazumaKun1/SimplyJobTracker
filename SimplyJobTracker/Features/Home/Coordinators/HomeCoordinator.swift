@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import FoundationModels
 
 nonisolated enum HomeRoute: Hashable {
     case start
@@ -17,11 +18,13 @@ nonisolated enum HomeRoute: Hashable {
 enum HomeSheetRoute: Identifiable {
     case filter(Binding<JobApplicationFilter>)
     case search([JobApplication])
+    case applicationHealthCheck(JobApplication)
 
     var id: String {
         switch self {
         case .filter: "filter"
         case .search: "search"
+        case .applicationHealthCheck: "applicationHealthCheck"
         }
     }
 }
@@ -37,6 +40,10 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
     var presentedSheet: HomeSheetRoute?
     
     private let modelContainer: ModelContainer
+
+    /* Checked once at app start rather than on every view body recomputation, since `SystemLanguageModel.default.availability` talks to a system model-management service that can be slow or unstable (e.g. while an on-device model update is in progress). Refreshed via `refreshHealthCheckAvailability()` whenever the app becomes active, so the button appears without requiring a relaunch once the model finishes downloading.
+     */
+    var isHealthCheckAvailable: Bool
 
     @ObservationIgnored
     private lazy var jobApplicationService: JobApplicationService = JobApplicationServiceImpl(modelContainer: modelContainer)
@@ -63,6 +70,19 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
     
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
+        isHealthCheckAvailable = Self.checkHealthCheckAvailability()
+    }
+
+    func refreshHealthCheckAvailability() {
+        isHealthCheckAvailable = Self.checkHealthCheckAvailability()
+    }
+
+    private static func checkHealthCheckAvailability() -> Bool {
+        if #available(iOS 26.0, *) {
+            SystemLanguageModel.default.availability == .available
+        } else {
+            false
+        }
     }
     
     @ViewBuilder
@@ -71,7 +91,7 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
         case .start:
             HomeView(viewModel: homeViewModel)
         case .applicationDetails(let application):
-            ApplicationDetailsView(jobApplication: application, viewModel: editJobApplicationViewModel)
+            ApplicationDetailsView(jobApplication: application, viewModel: editJobApplicationViewModel, coordinator: self)
         case .editApplication(let application):
             EditJobApplicationView(jobApplication: application, viewModel: editJobApplicationViewModel)
         }
@@ -84,6 +104,17 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
             FilterView(filter: filter)
         case .search(let applications):
             SearchView(applications: applications, onSelect: homeViewModel.editApplicationTapped)
+        case .applicationHealthCheck(let application):
+            if #available(iOS 26.0, *) {
+                ApplicationHealthCheckView(
+                    viewModel: ApplicationHealthCheckViewModel(
+                        service: ApplicationHealthCheckServiceImpl(),
+                        jobApplication: application
+                    )
+                )
+            } else {
+                EmptyView()
+            }
         }
     }
 }

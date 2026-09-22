@@ -10,7 +10,8 @@ import SwiftUI
 struct ApplicationDetailsView: View {
     var jobApplication: JobApplication
     var viewModel: EditJobApplicationViewModel
-    
+    var coordinator: HomeCoordinator
+
     var body: some View {
         ScreenContainer {
             JobDetailsView(application: jobApplication)
@@ -26,6 +27,16 @@ struct ApplicationDetailsView: View {
                         .foregroundStyle(.blue)
                 }
             }
+            if coordinator.isHealthCheckAvailable {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        coordinator.presentSheet(.applicationHealthCheck(jobApplication))
+                    } label: {
+                        Image(systemName: "sparkles")
+                    }
+                    .accessibilityLabel("AI Health Check")
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     jobApplication.isFavorite.toggle()
@@ -38,6 +49,7 @@ struct ApplicationDetailsView: View {
                 .accessibilityValue(jobApplication.isFavorite ? "On" : "Off")
                 .accessibilityAddTraits(.isToggle)
                 .accessibilityRemoveTraits(.isButton)
+                .sensoryFeedback(.selection, trigger: jobApplication.isFavorite)
             }
         }
     }

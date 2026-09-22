@@ -29,9 +29,9 @@ struct SearchView: View {
                 }
                 .padding(.horizontal)
             }
-            .presentationDetents([.fraction(0.5)])
-            .presentationBackground(.cardBackground2)
         }
         .searchable(text: $searchText, prompt: "Search by company or role")
+        .presentationDetents([.fraction(0.5)])
+        .presentationBackground(.cardBackground2)
     }
 }
