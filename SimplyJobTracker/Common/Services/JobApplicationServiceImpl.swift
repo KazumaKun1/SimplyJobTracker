@@ -11,8 +11,11 @@ import WidgetKit
 
 protocol JobApplicationService: Actor {
     func createJobApplication() throws
+    func createJobApplication(_ input: NewJobApplicationInput) throws
     func deleteJobApplication(id: PersistentIdentifier) throws
     func deleteAllJobApplications() throws
+    func countApplications(status: JobApplicationStatus?) throws -> Int
+    func getLatestApplication() throws -> JobApplicationEntity?
     func exportCSVFile() throws -> URL
 }
 
@@ -27,6 +30,18 @@ actor JobApplicationServiceImpl: JobApplicationService {
         let jobApplication = JobApplication()
         modelContext.insert(jobApplication)
         
+        try modelContext.save()
+        
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+    
+    func createJobApplication(_ input: NewJobApplicationInput) throws {
+        let jobApplication = JobApplication()
+        jobApplication.company = input.company
+        jobApplication.role = input.role
+        jobApplication.status = input.status
+
+        modelContext.insert(jobApplication)
         try modelContext.save()
         
         WidgetCenter.shared.reloadAllTimelines()
@@ -49,6 +64,42 @@ actor JobApplicationServiceImpl: JobApplicationService {
         
         WidgetCenter.shared.reloadAllTimelines()
     }
+}
+
+// MARK: - Siri
+extension JobApplicationServiceImpl {
+    func countApplications(status: JobApplicationStatus?) throws -> Int {
+        // TODO: - Find a way to use `fetchCount` here for an enum comparison on predicate. Temporary fix
+        let descriptor = FetchDescriptor<JobApplication>()
+        let applications = try modelContext.fetch(descriptor)
+
+        if let status {
+            return applications.filter { $0.status == status }.count
+        }
+        
+        return applications.count
+    }
+    
+    func getLatestApplication() throws -> JobApplicationEntity? {
+        var descriptor = FetchDescriptor<JobApplication>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+        descriptor.fetchLimit = 1
+        
+        guard let application = try modelContext.fetch(descriptor).first else {
+            return nil
+        }
+
+        return JobApplicationEntity(application)
+    }
+}
+
+// MARK: - CSV Export
+
+extension JobApplicationServiceImpl {
+    func exportCSVFile() throws -> URL {
+        let rows = try fetchAllForExport()
+        guard !rows.isEmpty else { throw JobApplicationServiceError.emptyRecords }
+        return try CSVExporter.writeToTemporaryFile(rows)
+    }
     
     private func fetchAllForExport() throws -> [JobApplicationExportRow] {
         modelContext.rollback()
@@ -56,11 +107,5 @@ actor JobApplicationServiceImpl: JobApplicationService {
         let descriptor = FetchDescriptor<JobApplication>(sortBy: [SortDescriptor(\.date)])
         let applications = try modelContext.fetch(descriptor)
         return applications.map(JobApplicationExportRow.init)
-    }
-
-    func exportCSVFile() throws -> URL {
-        let rows = try fetchAllForExport()
-        guard !rows.isEmpty else { throw JobApplicationServiceError.emptyRecords }
-        return try CSVExporter.writeToTemporaryFile(rows)
     }
 }

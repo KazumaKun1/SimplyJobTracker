@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import RevenueCat
+import AppIntents
 
 @main
 struct SimplyJobTrackerApp: App {
@@ -29,6 +30,8 @@ struct SimplyJobTrackerApp: App {
         )
         
         _coordinator = State(initialValue: TabCoordinator(modelContainer: sharedModelContainer))
+        
+        SimplyJobTrackerShortcuts.updateAppShortcutParameters()
     }
 
     var body: some Scene {

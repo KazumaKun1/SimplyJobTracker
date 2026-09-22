@@ -24,7 +24,7 @@ struct JobApplicationList: View {
                     JobApplicationCard(application: application)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("\(application.role ?? "Untitled Role") at \(application.company ?? "Untitled Company"), \(application.status.title)\(application.isFavorite ? ", Favorite" : "")")
+                .accessibilityLabel("\(application.role.nilIfEmpty ?? "Untitled Role") at \(application.company.nilIfEmpty ?? "Untitled Company"), \(application.status.title)\(application.isFavorite ? ", Favorite" : "")")
                 .accessibilityValue(valueKey)
             }
         }
@@ -41,10 +41,10 @@ struct JobApplicationCard: View {
         HStack(alignment: .top) {
             VStack(alignment: .leading) {
                 JobApplicationStatusView(title: application.status.title, color: application.status.color)
-                Text(application.role ?? "Untitled Role")
+                Text(application.role.nilIfEmpty ?? "Untitled Role")
                     .font(.headline)
                 HStack {
-                    Text(application.company ?? "Untitled Company")
+                    Text(application.company.nilIfEmpty ?? "Untitled Company")
                         .font(.subheadline)
                     if !application.interviews.isEmpty {
                         Text(" • ")

@@ -18,7 +18,6 @@ struct SettingsView: View {
     var body: some View {
         ScreenContainer {
             VStack(spacing: 16) {
-                BackupView()
                 DataPrivacyView()
                 TippingJar(shouldShowThankYou: viewModel.showThankYouMessage, packages: viewModel.packages) { package in
                     Task {

@@ -8,32 +8,6 @@
 import SwiftUI
 import RevenueCat
 
-// MARK: - Backup Feature
-extension SettingsView {
-    struct BackupView: View {
-        var body: some View {
-            HeaderView(text: "BACKUP")
-            VStack(spacing: 0) {
-                Image(.googledrive)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 35, height: 35)
-                Text("Back up to Google Drive feature is coming soon")
-                    .foregroundStyle(.gray)
-                    .padding()
-                    .multilineTextAlignment(.center)
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.cardBackground)
-            )
-            .accessibilityElement(children: .combine)
-        }
-    }
-}
-
 // MARK: - Data Privacy
 extension SettingsView {
     struct DataPrivacyView: View {
@@ -128,6 +102,7 @@ extension SettingsView {
                                 .font(.caption)
                         }
                         .frame(maxWidth: .infinity)
+                        .frame(minHeight: 40)
                         .padding(.vertical, 12)
                         .padding(.horizontal, 8)
                         .foregroundStyle(.white)
