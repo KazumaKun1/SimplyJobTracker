@@ -41,9 +41,9 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
     
     private let modelContainer: ModelContainer
 
-    /* Checked once at app start rather than on every view body recomputation, since `SystemLanguageModel.default.availability` talks to a system model-management service that can be slow or unstable (e.g. while an on-device model update is in progress).
+    /* Checked once at app start rather than on every view body recomputation, since `SystemLanguageModel.default.availability` talks to a system model-management service that can be slow or unstable (e.g. while an on-device model update is in progress). Refreshed via `refreshHealthCheckAvailability()` whenever the app becomes active, so the button appears without requiring a relaunch once the model finishes downloading.
      */
-    let isHealthCheckAvailable: Bool
+    var isHealthCheckAvailable: Bool
 
     @ObservationIgnored
     private lazy var jobApplicationService: JobApplicationService = JobApplicationServiceImpl(modelContainer: modelContainer)
@@ -70,10 +70,18 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
     
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
+        isHealthCheckAvailable = Self.checkHealthCheckAvailability()
+    }
+
+    func refreshHealthCheckAvailability() {
+        isHealthCheckAvailable = Self.checkHealthCheckAvailability()
+    }
+
+    private static func checkHealthCheckAvailability() -> Bool {
         if #available(iOS 26.0, *) {
-            isHealthCheckAvailable = SystemLanguageModel.default.availability == .available
+            SystemLanguageModel.default.availability == .available
         } else {
-            isHealthCheckAvailable = false
+            false
         }
     }
     

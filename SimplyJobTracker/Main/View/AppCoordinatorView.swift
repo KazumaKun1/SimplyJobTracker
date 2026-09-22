@@ -28,6 +28,7 @@ private extension AppCoordinatorView {
     
     struct HomeView: View {
         @Bindable var coordinator: HomeCoordinator
+        @Environment(\.scenePhase) private var scenePhase
 
         var body: some View {
             NavigationStack(path: $coordinator.path) {
@@ -39,6 +40,11 @@ private extension AppCoordinatorView {
             .sheet(item: $coordinator.presentedSheet) { sheet in
                 coordinator.build(sheet: sheet)
                     .presentationDragIndicator(.visible)
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                if newPhase == .active {
+                    coordinator.refreshHealthCheckAvailability()
+                }
             }
             .alert(
                 coordinator.presentAlert?.title ?? "",
