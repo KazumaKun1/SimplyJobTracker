@@ -16,8 +16,11 @@ struct LatestApplicationIntent: AppIntent {
             return .result(dialog: "You don't have any job applications right now.")
         }
         
+        let fragment = JobApplicationDialogText.roleCompanyFragment(role: latestEntity.role, company: latestEntity.company)
+        let fragmentClause = fragment.map { " \($0)" } ?? ""
+
         try await requestConfirmation(
-            dialog: "Your latest application is \(latestEntity.role) at \(latestEntity.company). Want the full summary?"
+            dialog: "Your latest application\(fragmentClause). Want the full summary?"
         )
         
         return .result(dialog: "\(latestEntity.summaryDialog)")
