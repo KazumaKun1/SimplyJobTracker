@@ -40,6 +40,14 @@ extension EditJobApplicationViewModel {
         }
     }
 
+    func moveInterview(_ interview: Interview, in jobApplication: JobApplication, direction: InterviewMoveDirection) {
+        do {
+            try interviewService.moveInterview(interview, in: jobApplication, direction: direction)
+        } catch {
+            presentGeneralError()
+        }
+    }
+
     func deleteJobApplication(_ jobApplication: JobApplication) async {
         do {
             try await jobApplicationService.deleteJobApplication(id: jobApplication.persistentModelID)

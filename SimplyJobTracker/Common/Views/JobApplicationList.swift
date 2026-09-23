@@ -47,8 +47,10 @@ struct JobApplicationCard: View {
                     Text(application.company.nilIfEmpty ?? "Untitled Company")
                         .font(.subheadline)
                     if !application.interviews.isEmpty {
-                        Text(" • ")
+                        Divider()
+                            .frame(height: 12)
                         Text("^[\(application.interviews.count) interview](inflect: true)")
+                            .font(.subheadline)
                     }
                 }
             }
@@ -58,7 +60,7 @@ struct JobApplicationCard: View {
                     .font(.caption2)
                     .foregroundStyle(.yellow)
             }
-            Text(application.date, format: .dateTime.month(.abbreviated).day())
+            Text(application.date, format: .dateTime.month(.abbreviated).day().year())
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -88,8 +90,4 @@ struct JobApplicationStatusView: View {
                     .opacity(0.2)
             )
     }
-}
-
-#Preview {
-    JobApplicationCard(application: JobApplication(isFavorite: true))
 }
