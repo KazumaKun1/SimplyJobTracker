@@ -32,7 +32,7 @@ A SwiftUI + SwiftData iOS app for tracking job applications — status, intervie
 open SimplyJobTracker.xcodeproj
 ```
 
-Build and run the `SimplyJobTracker` scheme on an iOS Simulator or device. One SPM dependency, `RevenueCat` (`purchases-ios-spm`), used by the Settings tip jar — resolves automatically when you open the project in Xcode. You'll also need `Common/Resources/Config.xcconfig` with a `REVENUECAT_API_KEY` set (wired through an `INFOPLIST_KEY_REVENUECAT_API_KEY` build setting into Info.plist).
+Build and run the `SimplyJobTracker` scheme on an iOS Simulator or device. One SPM dependency, `RevenueCat` (`purchases-ios-spm`), used by the Settings tip jar — resolves automatically when you open the project in Xcode. You'll also need `SimplyJobTracker/Common/Resources/Config.xcconfig` with a `REVENUECAT_API_KEY` set (wired through an `INFOPLIST_KEY_REVENUECAT_API_KEY` build setting into Info.plist).
 
 To build or test from the command line, use the standard `xcodebuild build` / `xcodebuild test` invocations against the `SimplyJobTracker` scheme.
 
