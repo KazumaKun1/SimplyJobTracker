@@ -34,6 +34,26 @@ struct InterviewServiceImplTests {
         #expect(interviews.count == 1)
     }
 
+    @Test("adding an interview after a middle one was deleted does not collide with an existing sort order")
+    func addsInterviewAfterMiddleDeleteWithoutCollision() async throws {
+        let context = try makeContext()
+        let jobApplication = JobApplication()
+        context.insert(jobApplication)
+        try context.save()
+
+        let service = InterviewServiceImpl(modelContext: context)
+        try service.addInterview(to: jobApplication)
+        try service.addInterview(to: jobApplication)
+        try service.addInterview(to: jobApplication)
+        let ordered = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
+        try service.deleteInterview(ordered[1])
+
+        try service.addInterview(to: jobApplication)
+
+        let sortOrders = jobApplication.interviews.map(\.sortOrder)
+        #expect(sortOrders.count == Set(sortOrders).count)
+    }
+
     @Test("deleting an interview removes it from the application entirely")
     func deletesInterview() async throws {
         let context = try makeContext()
@@ -104,5 +124,28 @@ struct InterviewServiceImplTests {
         try service.moveInterview(last, in: jobApplication, direction: .down)
 
         #expect(last.sortOrder == 1)
+    }
+
+    @Test("moving an interview reorders it even when existing sort orders are tied")
+    func movesInterviewDespiteTiedSortOrders() async throws {
+        let context = try makeContext()
+        let jobApplication = JobApplication()
+        context.insert(jobApplication)
+        try context.save()
+
+        let first = Interview()
+        let second = Interview()
+        let third = Interview()
+        context.insert(first)
+        context.insert(second)
+        context.insert(third)
+        jobApplication.interviews = [first, second, third]
+        try context.save()
+
+        let service = InterviewServiceImpl(modelContext: context)
+        try service.moveInterview(second, in: jobApplication, direction: .down)
+
+        let ordered = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
+        #expect(ordered.map(\.persistentModelID) == [first, third, second].map(\.persistentModelID))
     }
 }

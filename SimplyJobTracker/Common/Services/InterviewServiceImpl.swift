@@ -27,7 +27,7 @@ final class InterviewServiceImpl: InterviewService {
 
     func addInterview(to jobApplication: JobApplication) throws {
         let interview = Interview()
-        interview.sortOrder = jobApplication.interviews.count
+        interview.sortOrder = (jobApplication.interviews.map(\.sortOrder).max() ?? -1) + 1
         modelContext.insert(interview)
         jobApplication.interviews.append(interview)
 
@@ -42,6 +42,11 @@ final class InterviewServiceImpl: InterviewService {
 
     func moveInterview(_ interview: Interview, in jobApplication: JobApplication, direction: InterviewMoveDirection) throws {
         let ordered = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
+
+        for (index, interview) in ordered.enumerated() {
+            interview.sortOrder = index
+        }
+
         guard let currentIndex = ordered.firstIndex(where: { $0.persistentModelID == interview.persistentModelID }) else {
             return
         }
@@ -51,11 +56,8 @@ final class InterviewServiceImpl: InterviewService {
             return
         }
 
-        let current = ordered[currentIndex]
-        let swapped = ordered[swapIndex]
-        let currentSortOrder = current.sortOrder
-        current.sortOrder = swapped.sortOrder
-        swapped.sortOrder = currentSortOrder
+        ordered[currentIndex].sortOrder = swapIndex
+        ordered[swapIndex].sortOrder = currentIndex
 
         try modelContext.save()
     }
