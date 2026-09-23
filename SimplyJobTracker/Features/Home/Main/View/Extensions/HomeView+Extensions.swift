@@ -421,6 +421,7 @@ extension HomeView {
             .shadow(radius: 2)
             .padding(.bottom, 10)
             .padding(.trailing, 10)
+            .accessibilityIdentifier(image)
         }
     }
 }
