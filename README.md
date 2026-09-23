@@ -54,6 +54,16 @@ Actively developed, with a growing suite of Swift Testing unit tests and a start
 
 This is a solo, human-directed project — I designed the features, architecture, and UI myself and wrote/reviewed every change. I used AI coding assistants (Claude Code) throughout as a pair-programming tool: generating boilerplate, drafting implementations from a spec I gave it, and helping debug — not as an autonomous agent building the app on its own.
 
+## Screenshots (IPhone Duo)
+<img width="331" height="454" alt="Screenshot 2026-09-24 at 12 12 02 AM" src="https://github.com/user-attachments/assets/a3af2eec-3694-4a38-99b9-338bdadcd3d4" />
+<img width="500" height="400" alt="Screenshot 2026-09-24 at 12 12 34 AM" src="https://github.com/user-attachments/assets/becfa4b3-8ff8-474f-888b-12d1abce68c0" />
+<img width="500" height="400" alt="Screenshot 2026-09-24 at 12 12 25 AM" src="https://github.com/user-attachments/assets/98d757f5-1ae4-4cbd-9dd0-53394ac7dd3f" />
+<img width="400" height="500" alt="Screenshot 2026-09-24 at 12 12 45 AM" src="https://github.com/user-attachments/assets/0283993f-a3f6-4d5d-824e-8a98667b4375" />
+<img width="400" height="500" alt="Screenshot 2026-09-24 at 12 12 53 AM" src="https://github.com/user-attachments/assets/08ecd061-cefc-4750-81a3-a934fe6501a8" />
+
+
+
+
 ## Screenshots (App)
 <img width="250" height="544" alt="simulator_screenshot_D5DA421D-1325-45F4-9694-AE8AE0B9F2A0" src="https://github.com/user-attachments/assets/67673a2f-8f71-41f8-8b40-c24900c3b756" />
 <img width="250" height="544" alt="simulator_screenshot_F33E18DB-E1AF-404D-8599-8E36D389E9E2" src="https://github.com/user-attachments/assets/939c270b-fb98-4709-8a48-244e6019cffa" />
