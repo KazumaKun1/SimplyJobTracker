@@ -39,6 +39,7 @@ struct SettingsView: View {
                 Text("\(applications.count) entries found")
                     .font(.subheadline)
                     .foregroundStyle(.gray)
+                Spacer()
             }
             .padding()
             .animation(.easeInOut(duration: 0.5), value: viewModel.showThankYouMessage)
