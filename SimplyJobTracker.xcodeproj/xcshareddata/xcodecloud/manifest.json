@@ -1,0 +1,9 @@
+{
+  "id" : "95fd9adb-47cc-4a10-87b7-04460f960c2e",
+  "targets" : [
+    {
+      "id" : "ee97cade-31a4-40ae-873c-9345b9017539",
+      "name" : "SimplyJobTracker"
+    }
+  ]
+}
