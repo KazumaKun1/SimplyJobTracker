@@ -18,7 +18,18 @@ class Interview {
     var descriptionContent: String?
     var sortOrder: Int = 0
 
+    var sortTiebreaker: UUID = UUID()
+
     init() {
         self.date = .now
+    }
+}
+
+extension Interview {
+    static func orderedComparator(_ lhs: Interview, _ rhs: Interview) -> Bool {
+        if lhs.sortOrder != rhs.sortOrder {
+            return lhs.sortOrder < rhs.sortOrder
+        }
+        return lhs.sortTiebreaker.uuidString < rhs.sortTiebreaker.uuidString
     }
 }

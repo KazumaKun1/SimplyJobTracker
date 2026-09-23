@@ -41,7 +41,7 @@ final class InterviewServiceImpl: InterviewService {
     }
 
     func moveInterview(_ interview: Interview, in jobApplication: JobApplication, direction: InterviewMoveDirection) throws {
-        let ordered = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
+        let ordered = jobApplication.interviews.sorted(by: Interview.orderedComparator)
 
         for (index, interview) in ordered.enumerated() {
             interview.sortOrder = index
