@@ -12,10 +12,12 @@ A SwiftUI + SwiftData iOS app for tracking job applications — status, intervie
 - **Favorites** — star an application to flag it, then filter down to favorites only
 - **Filtering & search** — by favorite, status, and single date/date range, shown as removable filter tags; a separate search sheet does live substring search over role/company
 - **Add / edit applications** — track role, company, status, 1–5 star rating, overall experience notes, feeling, date applied, and associated interviews (each with its own title, date, and description)
+- **AI health check (iOS 26+)** — an on-device summary of an application's status and a suggested next action, generated locally with Apple's Foundation Models framework (no data leaves the device)
+- **Siri Shortcuts** — add an application, get a status count, hear your latest application, or ask for a summary, all by voice via App Intents
 - **CSV export** — export all applications to CSV (with formula-injection–safe escaping) and share via the system share sheet
 - **Home-screen widget** — a small WidgetKit widget showing application counts by status
 - **Tip jar** — optional in-app tips via RevenueCat, in Settings
-- **Accessibility** — VoiceOver labels/values/hints and grouped elements throughout the Home screen and filters
+- **Accessibility** — VoiceOver labels/values/hints and grouped elements throughout the Home screen and filters, plus haptic feedback on key interactions
 - **Data stays on-device** — no account required; a "back up to Google Drive" option is planned but not yet implemented
 
 ## Requirements
@@ -30,21 +32,27 @@ A SwiftUI + SwiftData iOS app for tracking job applications — status, intervie
 open SimplyJobTracker.xcodeproj
 ```
 
-Build and run the `SimplyJobTracker` scheme on an iOS Simulator or device. One SPM dependency, `RevenueCat` (`purchases-ios-spm`), used by the Settings tip jar — resolves automatically when you open the project in Xcode. You'll also need `Common/Resources/Config.xcconfig` with a `REVENUECAT_API_KEY` set; see [CLAUDE.md](CLAUDE.md) for details.
+Build and run the `SimplyJobTracker` scheme on an iOS Simulator or device. One SPM dependency, `RevenueCat` (`purchases-ios-spm`), used by the Settings tip jar — resolves automatically when you open the project in Xcode. You'll also need `Common/Resources/Config.xcconfig` with a `REVENUECAT_API_KEY` set (wired through an `INFOPLIST_KEY_REVENUECAT_API_KEY` build setting into Info.plist).
 
-To build or test from the command line, see [CLAUDE.md](CLAUDE.md) for the exact `xcodebuild` invocations.
+To build or test from the command line, use the standard `xcodebuild build` / `xcodebuild test` invocations against the `SimplyJobTracker` scheme.
 
 ## Tech stack
 
 - **SwiftUI** for the UI, **SwiftData** for persistence
 - **WidgetKit** for the home-screen widget, sharing data with the app via an App Group
 - **RevenueCat** (SPM) for the Settings tip jar
-- **Swift Testing** for unit tests, **XCTest** for UI tests (both currently template stubs — see Status below)
-- A lightweight coordinator pattern for navigation/alerts and `@Observable` view models — see [CLAUDE.md](CLAUDE.md) for the architecture details
+- **Swift Testing** for unit tests, **XCTest** for UI tests
+- **App Intents** for Siri Shortcuts support
+- **Foundation Models** (Apple's on-device LLM framework, iOS 26+) for the AI health check summary
+- A lightweight coordinator pattern for navigation/alerts and `@Observable` view models
 
 ## Status
 
-Actively developed. Test targets are currently unfilled Xcode templates (no real unit or UI test coverage yet), though CI runs `xcodebuild test` on every PR.
+Actively developed, with a growing suite of Swift Testing unit tests and a starting XCTest UI test; CI runs the full test suite on every PR. Coverage is real but not exhaustive.
+
+## Development
+
+This is a solo, human-directed project — I designed the features, architecture, and UI myself and wrote/reviewed every change. I used AI coding assistants (Claude Code) throughout as a pair-programming tool: generating boilerplate, drafting implementations from a spec I gave it, and helping debug — not as an autonomous agent building the app on its own.
 
 ## Screenshots (App)
 <img width="250" height="544" alt="simulator_screenshot_D5DA421D-1325-45F4-9694-AE8AE0B9F2A0" src="https://github.com/user-attachments/assets/67673a2f-8f71-41f8-8b40-c24900c3b756" />
