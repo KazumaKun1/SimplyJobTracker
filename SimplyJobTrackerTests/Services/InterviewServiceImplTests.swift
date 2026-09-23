@@ -45,7 +45,7 @@ struct InterviewServiceImplTests {
         try service.addInterview(to: jobApplication)
         try service.addInterview(to: jobApplication)
         try service.addInterview(to: jobApplication)
-        let ordered = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
+        let ordered = jobApplication.interviews.sorted(by: Interview.orderedComparator)
         try service.deleteInterview(ordered[1])
 
         try service.addInterview(to: jobApplication)
@@ -82,7 +82,7 @@ struct InterviewServiceImplTests {
         let service = InterviewServiceImpl(modelContext: context)
         try service.addInterview(to: jobApplication)
         try service.addInterview(to: jobApplication)
-        let ordered = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
+        let ordered = jobApplication.interviews.sorted(by: Interview.orderedComparator)
         let first = ordered[0]
         let second = ordered[1]
 
@@ -102,7 +102,7 @@ struct InterviewServiceImplTests {
         let service = InterviewServiceImpl(modelContext: context)
         try service.addInterview(to: jobApplication)
         try service.addInterview(to: jobApplication)
-        let first = try #require(jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }.first)
+        let first = try #require(jobApplication.interviews.sorted(by: Interview.orderedComparator).first)
 
         try service.moveInterview(first, in: jobApplication, direction: .up)
 
@@ -119,7 +119,7 @@ struct InterviewServiceImplTests {
         let service = InterviewServiceImpl(modelContext: context)
         try service.addInterview(to: jobApplication)
         try service.addInterview(to: jobApplication)
-        let last = try #require(jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }.last)
+        let last = try #require(jobApplication.interviews.sorted(by: Interview.orderedComparator).last)
 
         try service.moveInterview(last, in: jobApplication, direction: .down)
 
@@ -143,16 +143,14 @@ struct InterviewServiceImplTests {
         try context.save()
 
         let service = InterviewServiceImpl(modelContext: context)
-        // SwiftData's to-many relationship isn't ordered, so its enumeration order after a save
-        // isn't guaranteed to match assignment order — read the pre-move order back rather than
-        // assuming [first, second, third].
-        let before = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
+
+        let before = jobApplication.interviews.sorted(by: Interview.orderedComparator)
         let moved = before[1]
         let neighbor = before[2]
 
         try service.moveInterview(moved, in: jobApplication, direction: .down)
 
-        let after = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
+        let after = jobApplication.interviews.sorted(by: Interview.orderedComparator)
         #expect(after[1].persistentModelID == neighbor.persistentModelID)
         #expect(after[2].persistentModelID == moved.persistentModelID)
         #expect(Set(after.map(\.sortOrder)).count == after.count)

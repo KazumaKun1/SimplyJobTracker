@@ -40,7 +40,7 @@ struct EditJobApplicationView: View {
                     RatingSection(rating: $jobApplication.rating)
                     TextFieldSection(title: "How it felt · optional", placeholder: "How did it feel, in a few words?", text: $jobApplication.feeling)
                     CalendarSection(date: $jobApplication.date.toOptional(fallback: .now))
-                    InterviewSection(interviews: jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }) {
+                    InterviewSection(interviews: jobApplication.interviews.sorted(by: Interview.orderedComparator)) {
                         viewModel.addInterview(to: jobApplication)
                     } deleteInterviewAction: { interview in
                         activeAlert = .deleteInterview(interview)
