@@ -142,6 +142,7 @@ extension EditJobApplicationView {
         let interviews: [Interview]
         let addInterviewAction: () -> Void
         let deleteInterviewAction: (Interview) -> Void
+        let moveInterviewAction: (Interview, InterviewMoveDirection) -> Void
 
         var body: some View {
             CustomSection {
@@ -165,9 +166,15 @@ extension EditJobApplicationView {
                             .padding()
                     } else {
                         LazyVStack(alignment: .leading, spacing: 10) {
-                            ForEach(interviews) { interview in
-                                InterviewCard(interview: interview) {
+                            ForEach(Array(interviews.enumerated()), id: \.element.id) { index, interview in
+                                InterviewCard(
+                                    interview: interview,
+                                    isFirst: index == 0,
+                                    isLast: index == interviews.count - 1
+                                ) {
                                     deleteInterviewAction(interview)
+                                } moveAction: { direction in
+                                    moveInterviewAction(interview, direction)
                                 }
                             }
                         }
@@ -188,11 +195,14 @@ extension EditJobApplicationView {
     
     struct InterviewCard: View {
         let interview: Interview
+        let isFirst: Bool
+        let isLast: Bool
         @State private var isExpanded: Bool = false
         @State private var mode: CardMode = .display
-        
+
         let deleteInterviewAction: () -> Void
-        
+        let moveAction: (InterviewMoveDirection) -> Void
+
         var body: some View {
             VStack(alignment: .leading) {
                 if mode == .display {
@@ -223,7 +233,7 @@ extension EditJobApplicationView {
                             Label(mode == .display ? "Edit" : "Done", systemImage: "pencil")
                                 .foregroundStyle(.blue)
                         }
-                        
+
                         Divider()
 
                         Button {
@@ -232,6 +242,30 @@ extension EditJobApplicationView {
                             Label("Delete", systemImage: "trash")
                                 .foregroundStyle(.red)
                         }
+
+                        Divider()
+
+                        Button {
+                            withAnimation(.smooth) {
+                                moveAction(.up)
+                            }
+                        } label: {
+                            Image(systemName: "chevron.up")
+                                .foregroundStyle(isFirst ? .gray.opacity(0.4) : .blue)
+                        }
+                        .disabled(isFirst)
+                        .accessibilityLabel("Move interview up")
+
+                        Button {
+                            withAnimation(.smooth) {
+                                moveAction(.down)
+                            }
+                        } label: {
+                            Image(systemName: "chevron.down")
+                                .foregroundStyle(isLast ? .gray.opacity(0.4) : .blue)
+                        }
+                        .disabled(isLast)
+                        .accessibilityLabel("Move interview down")
                     }
                     .font(.subheadline)
                 }

@@ -26,7 +26,7 @@ extension ApplicationDetailsView {
                 
                 JobMetricsView(interviewCount: application.interviews.count, rating: application.rating)
                 if application.interviews.count > 0 {
-                    InterviewFlowView(interviews: application.interviews)
+                    InterviewFlowView(interviews: application.interviews.sorted { $0.sortOrder < $1.sortOrder })
                 }
 
                 DetailView(headerTitle: "NOTES", text: application.overallExperience.nilIfEmpty)
