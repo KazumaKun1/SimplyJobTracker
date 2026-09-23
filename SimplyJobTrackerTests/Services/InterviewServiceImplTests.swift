@@ -143,9 +143,18 @@ struct InterviewServiceImplTests {
         try context.save()
 
         let service = InterviewServiceImpl(modelContext: context)
-        try service.moveInterview(second, in: jobApplication, direction: .down)
+        // SwiftData's to-many relationship isn't ordered, so its enumeration order after a save
+        // isn't guaranteed to match assignment order — read the pre-move order back rather than
+        // assuming [first, second, third].
+        let before = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
+        let moved = before[1]
+        let neighbor = before[2]
 
-        let ordered = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
-        #expect(ordered.map(\.persistentModelID) == [first, third, second].map(\.persistentModelID))
+        try service.moveInterview(moved, in: jobApplication, direction: .down)
+
+        let after = jobApplication.interviews.sorted { $0.sortOrder < $1.sortOrder }
+        #expect(after[1].persistentModelID == neighbor.persistentModelID)
+        #expect(after[2].persistentModelID == moved.persistentModelID)
+        #expect(Set(after.map(\.sortOrder)).count == after.count)
     }
 }
