@@ -19,6 +19,8 @@ struct StatusView: View {
                 .foregroundStyle(color)
             Text(title)
                 .foregroundStyle(color.opacity(0.8))
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
         }
     }
 }

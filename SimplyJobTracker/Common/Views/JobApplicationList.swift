@@ -38,31 +38,34 @@ struct JobApplicationCard: View {
     let application: JobApplication
 
     var body: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading) {
-                JobApplicationStatusView(title: application.status.title, color: application.status.color)
-                Text(application.role.nilIfEmpty ?? "Untitled Role")
-                    .font(.headline)
-                HStack {
-                    Text(application.company.nilIfEmpty ?? "Untitled Company")
-                        .font(.subheadline)
-                    if !application.interviews.isEmpty {
-                        Divider()
-                            .frame(height: 12)
-                        Text("^[\(application.interviews.count) interview](inflect: true)")
-                            .font(.subheadline)
-                    }
+        VStack(alignment: .leading) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading) {
+                    JobApplicationStatusView(title: application.status.title, color: application.status.color)
+                    Text(application.role.nilIfEmpty ?? "Untitled Role")
+                        .font(.headline)
                 }
+                Spacer()
+                if application.isFavorite {
+                    Image(systemName: "star.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.yellow)
+                }
+                Text(application.date, format: .dateTime.month(.abbreviated).day().year())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
             Spacer()
-            if application.isFavorite {
-                Image(systemName: "star.fill")
-                    .font(.caption2)
-                    .foregroundStyle(.yellow)
+            HStack(alignment: .top) {
+                Text(application.company.nilIfEmpty ?? "Untitled Company")
+                    .font(.subheadline)
+                if !application.interviews.isEmpty {
+                    Divider()
+                        .frame(height: 12)
+                    Text("^[\(application.interviews.count) interview](inflect: true)")
+                        .font(.subheadline)
+                }
             }
-            Text(application.date, format: .dateTime.month(.abbreviated).day().year())
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
         .padding()
         .background(

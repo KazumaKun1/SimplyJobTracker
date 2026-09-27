@@ -36,6 +36,8 @@ extension EditJobApplicationView {
                                 Text(status.title)
                                     .font(.callout)
                                     .fontWeight(currentStatus == status ? .bold : .regular)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.6)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
