@@ -22,25 +22,49 @@ struct EditJobApplicationView: View {
         }
     }
     
+    enum EditField: Hashable {
+        case role, company, overallExperience, feeling, interviewTitle(UUID), interviewDescription(UUID)
+    }
+    
     @Bindable var jobApplication: JobApplication
 
     var viewModel: EditJobApplicationViewModel
 
     @Environment(\.modelContext) private var modelContext
     @State private var activeAlert: AlertType?
+    @FocusState private var focusedField: EditField?
     
     var body: some View {
         ScrollViewReader { proxy in
             ScreenContainer {
                 VStack(spacing: 30) {
                     StatusSection(currentStatus: $jobApplication.status)
-                    TextFieldSection(title: "Name of the Role · optional", placeholder: "e.g. Role ABC", text: $jobApplication.role)
-                    TextFieldSection(title: "Name of the Company · optional", placeholder: "e.g. Company ABC", text: $jobApplication.company)
+                    TextFieldSection(
+                        title: "Name of the Role · optional",
+                        placeholder: "e.g. Role ABC",
+                        text: $jobApplication.role,
+                        focusedField: $focusedField,
+                        fieldID: .role,
+                        nextField: .company
+                    )
+                    TextFieldSection(
+                        title: "Name of the Company · optional",
+                        placeholder: "e.g. Company ABC",
+                        text: $jobApplication.company,
+                        focusedField: $focusedField,
+                        fieldID: .company
+                    )
                     OverallExperienceSection(overallExperience: $jobApplication.overallExperience)
                     RatingSection(rating: $jobApplication.rating)
-                    TextFieldSection(title: "How it felt · optional", placeholder: "How did it feel, in a few words?", text: $jobApplication.feeling)
+                    TextFieldSection(
+                        title: "How it felt · optional",
+                        placeholder: "How did it feel, in a few words?",
+                        text: $jobApplication.feeling,
+                        focusedField: $focusedField,
+                        fieldID: .feeling
+                    )
                     CalendarSection(date: $jobApplication.date.toOptional(fallback: .now))
-                    InterviewSection(interviews: jobApplication.interviews.sorted(by: Interview.orderedComparator)) {
+                    InterviewSection(interviews: jobApplication.interviews.sorted(by: Interview.orderedComparator), focusedField: $focusedField) {
                         viewModel.addInterview(to: jobApplication)
                     } deleteInterviewAction: { interview in
                         activeAlert = .deleteInterview(interview)

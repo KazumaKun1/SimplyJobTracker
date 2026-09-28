@@ -142,6 +142,9 @@ extension EditJobApplicationView {
 extension EditJobApplicationView {
     struct InterviewSection: View {
         let interviews: [Interview]
+        
+        var focusedField: FocusState<EditField?>.Binding
+        
         let addInterviewAction: () -> Void
         let deleteInterviewAction: (Interview) -> Void
         let moveInterviewAction: (Interview, InterviewMoveDirection) -> Void
@@ -172,7 +175,8 @@ extension EditJobApplicationView {
                                 InterviewCard(
                                     interview: interview,
                                     isFirst: index == 0,
-                                    isLast: index == interviews.count - 1
+                                    isLast: index == interviews.count - 1,
+                                    focusedField: focusedField
                                 ) {
                                     deleteInterviewAction(interview)
                                 } moveAction: { direction in
@@ -201,6 +205,8 @@ extension EditJobApplicationView {
         let isLast: Bool
         @State private var isExpanded: Bool = false
         @State private var mode: CardMode = .display
+        
+        var focusedField: FocusState<EditField?>.Binding
 
         let deleteInterviewAction: () -> Void
         let moveAction: (InterviewMoveDirection) -> Void
@@ -213,16 +219,26 @@ extension EditJobApplicationView {
                             isExpanded.toggle()
                         }
                     } label: {
-                        InterviewContentView(interview: interview, mode: mode, isExpanded: isExpanded)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
+                        InterviewContentView(
+                            interview: interview,
+                            mode: mode,
+                            isExpanded: isExpanded,
+                            focusedField: focusedField
+                        )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(interview.title ?? "Untitled Interview")
                     .accessibilityAddTraits(isExpanded ? [.isSelected] : [])
                     .accessibilityValue(isExpanded ? "Expanded" : "Collapsed")
                 } else {
-                    InterviewContentView(interview: interview, mode: mode, isExpanded: isExpanded)
+                    InterviewContentView(
+                        interview: interview,
+                        mode: mode,
+                        isExpanded: isExpanded,
+                        focusedField: focusedField
+                    )
                 }
 
                 if isExpanded {
@@ -286,6 +302,8 @@ extension EditJobApplicationView {
         @Bindable var interview: Interview
         let mode: CardMode
         let isExpanded: Bool
+        
+        var focusedField: FocusState<EditField?>.Binding
 
         var body: some View {
             VStack(alignment: .leading, spacing: 16) {
@@ -305,13 +323,31 @@ extension EditJobApplicationView {
                             .multilineTextAlignment(.leading)
                     }
                 } else {
-                    TextFieldView(placeholder: "Untitled Interview", text: $interview.title)
-                        .font(.headline)
+                    TextFieldView(
+                        placeholder: "Untitled Interview",
+                        text: $interview.title,
+                        focusedField: focusedField,
+                        fieldID: .interviewTitle(interview.sortTiebreaker),
+                        nextField: 
+                                .interviewDescription(interview.sortTiebreaker)
+                    )
+                    .font(.headline)
                     if isExpanded {
                         DatePicker("Select Date", selection: $interview.date, displayedComponents: [.date])
                             .datePickerStyle(.compact)
-                        TextFieldView(placeholder: "e.g. the interview asked about...", text: $interview.descriptionContent, lineLimit: 1...4)
-                            .multilineTextAlignment(.leading)
+                        TextFieldView(
+                            placeholder: "e.g. the interview asked about...",
+                            text: $interview.descriptionContent,
+                            lineLimit: 1...4,
+                            focusedField: focusedField,
+                            fieldID: 
+                                    .interviewDescription(
+                                        interview.sortTiebreaker
+                                    ),
+                            nextField: nil,
+                            axis: .vertical
+                        )
+                        .multilineTextAlignment(.leading)
                     }
                 }
             }
@@ -327,10 +363,23 @@ extension EditJobApplicationView {
         let placeholder: String
         var text: Binding<String?>
         
+        var focusedField: FocusState<EditField?>.Binding
+        let fieldID: EditField
+        var nextField: EditField? = nil
+        
+        var axis: Axis = .horizontal
+        
         var body: some View {
             CustomSection {
                 HeaderView(text: title)
-                TextFieldView(placeholder: placeholder, text: text)
+                TextFieldView(
+                    placeholder: placeholder,
+                    text: text,
+                    focusedField: focusedField,
+                    fieldID: fieldID,
+                    nextField: nextField,
+                    axis: axis
+                )
             }
         }
     }
@@ -342,11 +391,22 @@ extension EditJobApplicationView {
         
         @FocusState private var isFocused: Bool
         
+        var focusedField: FocusState<EditField?>.Binding
+        let fieldID: EditField
+        var nextField: EditField? = nil
+        
+        var axis: Axis = .horizontal
+        
         var body: some View {
             VStack {
-                TextField(placeholder, text: $text.unwrapped(), axis: .vertical)
+                TextField(placeholder, text: $text.unwrapped(), axis: axis)
                     .lineLimit(lineLimit)
                     .focused($isFocused)
+                    .focused(focusedField, equals: fieldID)
+                    .submitLabel(nextField == nil ? .done : .next)
+                    .onSubmit {
+                        focusedField.wrappedValue = nextField
+                    }
                    
                 Rectangle()
                     .frame(height: 1)
