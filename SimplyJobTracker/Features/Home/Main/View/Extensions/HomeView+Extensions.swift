@@ -379,6 +379,8 @@ extension HomeView {
                 Text(text)
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
             }
             .padding()
             .frame(maxWidth: .infinity)
