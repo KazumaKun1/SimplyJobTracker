@@ -12,7 +12,6 @@ import WidgetKit
 protocol JobApplicationService: Actor {
     func createJobApplication() throws
     func createJobApplication(_ input: NewJobApplicationInput) throws
-    func deleteJobApplication(id: PersistentIdentifier) throws
     func deleteAllJobApplications() throws
     func countApplications(status: JobApplicationStatus?) throws -> Int
     func getLatestApplication() throws -> JobApplicationEntity?
@@ -20,7 +19,6 @@ protocol JobApplicationService: Actor {
 }
 
 enum JobApplicationServiceError: Error {
-    case notFound
     case emptyRecords
 }
 
@@ -47,17 +45,6 @@ actor JobApplicationServiceImpl: JobApplicationService {
         WidgetCenter.shared.reloadAllTimelines()
     }
 
-    func deleteJobApplication(id: PersistentIdentifier) throws {
-        guard let jobApplication = modelContext.model(for: id) as? JobApplication else {
-            throw JobApplicationServiceError.notFound
-        }
-
-        modelContext.delete(jobApplication)
-        try modelContext.save()
-        
-        WidgetCenter.shared.reloadAllTimelines()
-    }
-    
     func deleteAllJobApplications() throws {
         try modelContext.delete(model: JobApplication.self)
         try modelContext.save()

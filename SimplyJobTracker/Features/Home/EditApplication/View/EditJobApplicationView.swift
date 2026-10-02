@@ -73,6 +73,7 @@ struct EditJobApplicationView: View {
                     }
                     
                     Button(role: .destructive) {
+                        focusedField = nil
                         activeAlert = .deleteJobApplication
                     } label: {
                         Label("Delete Job Application", systemImage: "trash.fill")
@@ -113,9 +114,7 @@ struct EditJobApplicationView: View {
             switch alertType {
             case .deleteJobApplication:
                 Button("Delete", role: .destructive) {
-                    Task {
-                        await viewModel.deleteJobApplication(jobApplication)
-                    }
+                    viewModel.deleteJobApplication(jobApplication)
                 }
             case .deleteInterview(let interview):
                 Button("Delete", role: .destructive) {

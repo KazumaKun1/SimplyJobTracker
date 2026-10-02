@@ -45,36 +45,6 @@ struct JobApplicationServiceImplTests {
         #expect(application?.status == .interviewing)
     }
 
-    @Test("deleting an application removes it from storage")
-    func deletesApplication() async throws {
-        let container = try makeContainer()
-        let service = JobApplicationServiceImpl(modelContainer: container)
-        try await service.createJobApplication()
-
-        let context = ModelContext(container)
-        let application = try #require(try context.fetch(FetchDescriptor<JobApplication>()).first)
-
-        try await service.deleteJobApplication(id: application.persistentModelID)
-
-        let remaining = try context.fetch(FetchDescriptor<JobApplication>())
-        #expect(remaining.isEmpty)
-    }
-
-    @Test("deleting something that isn't a job application fails clearly instead of silently doing nothing")
-    func deleteMissingThrows() async throws {
-        let container = try makeContainer()
-        let service = JobApplicationServiceImpl(modelContainer: container)
-
-        let context = ModelContext(container)
-        let interview = Interview()
-        context.insert(interview)
-        try context.save()
-
-        await #expect(throws: JobApplicationServiceError.notFound) {
-            try await service.deleteJobApplication(id: interview.persistentModelID)
-        }
-    }
-
     @Test("erasing all data leaves nothing behind, no matter how many applications existed")
     func deletesAllApplications() async throws {
         let container = try makeContainer()
