@@ -19,6 +19,7 @@ protocol NavigationCoordinator<NavigationRoute>: AnyObject {
 
     func navigate(to route: NavigationRoute)
     func pop()
+    func popToRoot()
 }
 
 extension NavigationCoordinator {
@@ -29,5 +30,10 @@ extension NavigationCoordinator {
     func pop() {
         guard !path.isEmpty else { return }
         path.removeLast()
+    }
+    
+    func popToRoot() {
+        guard !path.isEmpty else { return }
+        path.removeLast(path.count)
     }
 }

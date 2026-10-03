@@ -52,6 +52,9 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
     private lazy var interviewService: InterviewService = InterviewServiceImpl(modelContext: modelContainer.mainContext)
 
     @ObservationIgnored
+    private lazy var jobApplicationDeletionService: JobApplicationDeletionService = JobApplicationDeletionServiceImpl(modelContext: modelContainer.mainContext)
+
+    @ObservationIgnored
     lazy var homeViewModel: HomeViewModel = {
         HomeViewModel(
             service: jobApplicationService,
@@ -62,7 +65,7 @@ class HomeCoordinator: NavigationCoordinator, AlertCoordinator {
     @ObservationIgnored
     lazy var editJobApplicationViewModel: EditJobApplicationViewModel = {
         EditJobApplicationViewModel(
-            jobApplicationService: jobApplicationService,
+            jobApplicationDeletionService: jobApplicationDeletionService,
             interviewService: interviewService,
             coordinator: self
         )

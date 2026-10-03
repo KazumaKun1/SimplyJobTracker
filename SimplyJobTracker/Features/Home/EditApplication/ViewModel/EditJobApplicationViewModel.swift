@@ -12,12 +12,12 @@ import SwiftData
 class EditJobApplicationViewModel {
     weak private var coordinator: HomeCoordinator?
 
-    private let jobApplicationService: JobApplicationService
+    private let jobApplicationDeletionService: JobApplicationDeletionService
     private let interviewService: InterviewService
 
-    init(jobApplicationService: JobApplicationService, interviewService: InterviewService, coordinator: HomeCoordinator) {
+    init(jobApplicationDeletionService: JobApplicationDeletionService, interviewService: InterviewService, coordinator: HomeCoordinator) {
         self.coordinator = coordinator
-        self.jobApplicationService = jobApplicationService
+        self.jobApplicationDeletionService = jobApplicationDeletionService
         self.interviewService = interviewService
     }
 }
@@ -48,10 +48,10 @@ extension EditJobApplicationViewModel {
         }
     }
 
-    func deleteJobApplication(_ jobApplication: JobApplication) async {
+    func deleteJobApplication(_ jobApplication: JobApplication) {
         do {
-            try await jobApplicationService.deleteJobApplication(id: jobApplication.persistentModelID)
-            coordinator?.pop()
+            try jobApplicationDeletionService.deleteJobApplication(jobApplication)
+            coordinator?.popToRoot()
         } catch {
             presentGeneralError()
         }
