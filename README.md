@@ -2,7 +2,7 @@
 
 # SimplyJobTracker
 
-A SwiftUI + SwiftData iOS app for tracking job applications — status, interviews, and activity over time — without spreadsheets.
+A SwiftUI + SwiftData iOS app for tracking job applications, status, interviews, and activity over time without spreadsheets.
 
 ## Features
 
@@ -52,25 +52,23 @@ Actively developed, with a growing suite of Swift Testing unit tests and a start
 
 ## Development
 
-This is a solo, human-directed project — I designed the features, architecture, and UI myself and wrote/reviewed every change. I used AI coding assistants (Claude Code) throughout as a pair-programming tool: generating boilerplate, drafting implementations from a spec I gave it, and helping debug — not as an autonomous agent building the app on its own.
+This is a solo, human-directed project. I designed the features, architecture, and UI myself and wrote/reviewed every change. I used AI coding assistants (Claude Code) throughout as a pair-programming tool: generating boilerplate, drafting implementations from a spec I gave it, and helping debug, not as an autonomous agent building the app on its own.
 
 ## Screenshots (IPhone Duo)
-<img width="331" height="454" alt="Screenshot 2026-09-24 at 12 12 02 AM" src="https://github.com/user-attachments/assets/a3af2eec-3694-4a38-99b9-338bdadcd3d4" />
-<img width="500" height="400" alt="Screenshot 2026-09-24 at 12 12 34 AM" src="https://github.com/user-attachments/assets/becfa4b3-8ff8-474f-888b-12d1abce68c0" />
-<img width="500" height="400" alt="Screenshot 2026-09-24 at 12 12 25 AM" src="https://github.com/user-attachments/assets/98d757f5-1ae4-4cbd-9dd0-53394ac7dd3f" />
-<img width="400" height="500" alt="Screenshot 2026-09-24 at 12 12 45 AM" src="https://github.com/user-attachments/assets/0283993f-a3f6-4d5d-824e-8a98667b4375" />
-<img width="400" height="500" alt="Screenshot 2026-09-24 at 12 12 53 AM" src="https://github.com/user-attachments/assets/08ecd061-cefc-4750-81a3-a934fe6501a8" />
-
-
+<img width="320" height="440" alt="Screenshot 2026-10-08 at 8 33 47 PM" src="https://github.com/user-attachments/assets/201be1f1-ea33-4e1a-9958-36697e3bea5d" />
+<img width="320" height="440" alt="Screenshot 2026-10-08 at 8 34 07 PM" src="https://github.com/user-attachments/assets/8f7afab1-5994-4ed4-8337-07f22570c2d2" />
+<img width="470" height="335" alt="Screenshot 2026-10-08 at 8 34 30 PM" src="https://github.com/user-attachments/assets/8b50d223-4eda-40a2-b7fd-5ec673298e4a" />
+<img width="330" height="460" alt="Screenshot 2026-10-08 at 8 34 41 PM" src="https://github.com/user-attachments/assets/5cc775d5-f819-4b4c-ad0e-cca4f19b102d" />
 
 
 ## Screenshots (App)
-<img width="250" height="544" alt="simulator_screenshot_D5DA421D-1325-45F4-9694-AE8AE0B9F2A0" src="https://github.com/user-attachments/assets/67673a2f-8f71-41f8-8b40-c24900c3b756" />
-<img width="250" height="544" alt="simulator_screenshot_F33E18DB-E1AF-404D-8599-8E36D389E9E2" src="https://github.com/user-attachments/assets/939c270b-fb98-4709-8a48-244e6019cffa" />
-<img width="250" height="544" alt="simulator_screenshot_74060EED-AE73-4829-9E02-DD867746C68B" src="https://github.com/user-attachments/assets/bb08402f-5a82-4bf6-b8df-baf065c17a8b" />
-<img width="250" height="544" alt="simulator_screenshot_418AB294-FB42-4814-975D-FDAEB5D573CA" src="https://github.com/user-attachments/assets/47b44789-27f9-4ad7-8ce9-561f47445cd9" />
-<img width="250" height="544" alt="simulator_screenshot_55A0AE3B-4D79-4581-A237-9F7DE09B7C87" src="https://github.com/user-attachments/assets/85d18d3f-d2b4-4957-a6a0-aaa3effba2c3" />
-<img width="250" height="544" alt="simulator_screenshot_C5C4BBD0-78BA-4B70-8838-83BADAB54356" src="https://github.com/user-attachments/assets/66249410-ac9b-46ca-a5bb-7fedba6bc4f2" />
+<img width="250" height="544" alt="Screenshot iPhone 17e 10-08-2026 at 8 20 32 PM" src="https://github.com/user-attachments/assets/df5a8940-9553-4612-94dd-df8ebb666ce7" />
+<img width="250" height="544" alt="Screenshot iPhone 17e 10-08-2026 at 8 20 09 PM" src="https://github.com/user-attachments/assets/9e00d344-419d-46a1-9dc1-c86e6a1f761c" />
+<img width="250" height="544" alt="Screenshot iPhone 17e 10-08-2026 at 8 20 22 PM" src="https://github.com/user-attachments/assets/01ca05b0-b0c8-451c-a178-e98e22b735a4" />
+<img width="250" height="544" alt="Screenshot iPhone 17e 10-08-2026 at 8 20 46 PM" src="https://github.com/user-attachments/assets/9e2ab90e-5519-41df-81b7-456f2e397392" />
+<img width="250" height="544" alt="Screenshot iPhone 17e 10-08-2026 at 8 20 54 PM" src="https://github.com/user-attachments/assets/89679821-892d-404e-a8aa-c13f3c81f581" />
+<img width="250" height="544" alt="Screenshot iPhone 17e 10-08-2026 at 8 21 00 PM" src="https://github.com/user-attachments/assets/c287377d-110b-49cb-8b28-c9ece3d5c19f" />
+
 
 ## Screenshots (Widget)
 <img width="86" height="82" alt="Screenshot 2026-09-16 at 10 50 43 PM" src="https://github.com/user-attachments/assets/2edcce90-9a28-40a2-9d66-2c6bd90dcd75" />
