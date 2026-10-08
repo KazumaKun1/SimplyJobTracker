@@ -54,6 +54,15 @@ Actively developed, with a growing suite of Swift Testing unit tests and a start
 
 This is a solo, human-directed project. I designed the features, architecture, and UI myself and wrote/reviewed every change. I used AI coding assistants (Claude Code) throughout as a pair-programming tool: generating boilerplate, drafting implementations from a spec I gave it, and helping debug, not as an autonomous agent building the app on its own.
 
+## Full Flow
+<p align="center">
+  <a href="https://youtu.be/XAOWGyN88E0">
+    <img src="https://img.youtube.com/vi/XAOWGyN88E0/maxresdefault.jpg" width="560" alt="Watch the walkthrough" />
+  </a>
+  <br />
+  <sub><a href="https://youtu.be/XAOWGyN88E0">▶ Watch the full walkthrough on YouTube</a></sub>
+</p>
+
 ## Screenshots (IPhone Duo)
 <img width="320" height="440" alt="Screenshot 2026-10-08 at 8 33 47 PM" src="https://github.com/user-attachments/assets/201be1f1-ea33-4e1a-9958-36697e3bea5d" />
 <img width="320" height="440" alt="Screenshot 2026-10-08 at 8 34 07 PM" src="https://github.com/user-attachments/assets/8f7afab1-5994-4ed4-8337-07f22570c2d2" />
