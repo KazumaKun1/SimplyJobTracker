@@ -13,8 +13,8 @@ xcodebuild -project SimplyJobTracker.xcodeproj -scheme SimplyJobTracker -destina
 # Test (unit tests: Swift Testing; UI tests: XCTest)
 xcodebuild test -project SimplyJobTracker.xcodeproj -scheme SimplyJobTracker -destination 'platform=iOS Simulator,OS=18.6,name=iPhone 16'
 
-# Single unit test
-... -only-testing:SimplyJobTrackerTests/SimplyJobTrackerTests/example
+# Single unit test (replace <Suite>/<testName> with the Swift Testing suite and test function)
+xcodebuild test -project SimplyJobTracker.xcodeproj -scheme SimplyJobTracker -destination 'platform=iOS Simulator,OS=18.6,name=iPhone 16' -only-testing:SimplyJobTrackerTests/<Suite>/<testName>
 ```
 
 - iOS 18.6 deployment target (app + widget; the 26.5 project default only applies to test targets). Swift 6, strict concurrency, `-default-isolation=MainActor`: types are MainActor by default, so opt out (`actor`/`nonisolated`) only for intentional background work. The widget target builds with Swift 5.
