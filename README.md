@@ -22,7 +22,7 @@ A SwiftUI + SwiftData iOS app for tracking job applications, status, interviews,
 
 ## Requirements
 
-- Xcode 26.6+
+- Xcode 26.3+
 - iOS 18.6+ (deployment target)
 - Swift 6
 
@@ -49,10 +49,6 @@ To build or test from the command line, use the standard `xcodebuild build` / `x
 ## Status
 
 Actively developed, with a growing suite of Swift Testing unit tests and a starting XCTest UI test; CI runs the full test suite on every PR. Coverage is real but not exhaustive.
-
-## Development
-
-This is a solo, human-directed project. I designed the features, architecture, and UI myself and wrote/reviewed every change. I used AI coding assistants (Claude Code) throughout as a pair-programming tool: generating boilerplate, drafting implementations from a spec I gave it, and helping debug, not as an autonomous agent building the app on its own.
 
 ## Full Flow
 <p align="center">
