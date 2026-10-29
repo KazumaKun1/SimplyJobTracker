@@ -9,10 +9,10 @@ import Foundation
 import SwiftUI
 
 enum Constants {
-    static let revenueCatAPIKey: String = {
+    static let revenueCatAPIKey: String? = {
         guard let key = Bundle.main.object(forInfoDictionaryKey: "REVENUECAT_API_KEY") as? String,
-              !key.isEmpty else {
-            fatalError("RevenueCatAPIKey missing from Info.plist — check Config.xcconfig is set up.")
+              !key.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return nil
         }
         return key
     }()

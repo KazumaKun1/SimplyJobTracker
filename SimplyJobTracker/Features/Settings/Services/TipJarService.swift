@@ -9,6 +9,7 @@ import RevenueCat
 
 enum TipJarError: Error {
     case offeringNotFound
+    case notConfigured
 }
 
 protocol TipJarService {
@@ -18,6 +19,7 @@ protocol TipJarService {
 
 actor TipJarServiceImpl: TipJarService {
     func fetchPackages() async throws -> [Package] {
+        guard Purchases.isConfigured else { throw TipJarError.notConfigured }
         let offerings = try await Purchases.shared.offerings()
         guard let packages = offerings.current?.availablePackages else {
             throw TipJarError.offeringNotFound
@@ -26,6 +28,7 @@ actor TipJarServiceImpl: TipJarService {
     }
     
     func purchase(_ package: Package) async throws -> Bool {
+        guard Purchases.isConfigured else { throw TipJarError.notConfigured }
         let result = try await Purchases.shared.purchase(package: package)
         return !result.userCancelled
     }
