@@ -34,6 +34,8 @@ open SimplyJobTracker.xcodeproj
 
 Build and run the `SimplyJobTracker` scheme on an iOS Simulator or device. One SPM dependency, `RevenueCat` (`purchases-ios-spm`), used by the Settings tip jar — resolves automatically when you open the project in Xcode. The app builds and runs without a RevenueCat key; the tip jar just shows "Tipping Unavailable". To enable it, create a gitignored `SimplyJobTracker/Common/Resources/Secrets.xcconfig` containing `REVENUECAT_API_KEY = your_key` (picked up by the committed `Config.xcconfig` and wired through an `INFOPLIST_KEY_REVENUECAT_API_KEY` build setting into Info.plist).
 
+> **Upgrading from an older clone?** `Config.xcconfig` used to hold the key and was gitignored; it's now a committed template, so pulling will silently overwrite your local copy. Before pulling, run `mv SimplyJobTracker/Common/Resources/Config.xcconfig SimplyJobTracker/Common/Resources/Secrets.xcconfig` to keep your key.
+
 To build or test from the command line, use the standard `xcodebuild build` / `xcodebuild test` invocations against the `SimplyJobTracker` scheme.
 
 ## Tech stack
