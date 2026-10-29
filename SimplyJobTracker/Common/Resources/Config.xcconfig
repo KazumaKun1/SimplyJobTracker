@@ -1,0 +1,15 @@
+//
+//  Config.xcconfig
+//  SimplyJobTracker
+//
+//  Created by Arviejhay Alejandro on 9/11/26.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+// Left empty so a fresh clone builds; the app shows "Tipping Unavailable" without a key.
+// To enable the tip jar, put the real key in the gitignored Secrets.xcconfig next to this file.
+REVENUECAT_API_KEY =
+
+#include? "Secrets.xcconfig"

@@ -17,17 +17,19 @@ struct SimplyJobTrackerApp: App {
     @State private var coordinator: TabCoordinator
     
     init() {
-        #if DEBUG
-        Purchases.logLevel = .debug
-        #else
-        Purchases.logLevel = .error
-        #endif
-        
-        Purchases.configure(
-            with: Configuration.Builder(withAPIKey: Constants.revenueCatAPIKey)
-                .with(storeKitVersion: .storeKit2)
-                .build()
-        )
+        if let key = Constants.revenueCatAPIKey {
+            #if DEBUG
+            Purchases.logLevel = .debug
+            #else
+            Purchases.logLevel = .error
+            #endif
+
+            Purchases.configure(
+                with: Configuration.Builder(withAPIKey: key)
+                    .with(storeKitVersion: .storeKit2)
+                    .build()
+            )
+        }
         
         _coordinator = State(initialValue: TabCoordinator(modelContainer: sharedModelContainer))
         
